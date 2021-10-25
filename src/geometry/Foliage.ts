@@ -114,7 +114,6 @@ class Foliage extends LSystem  {
   }
 
   advanceTurtleBy(frac: number) {
-    //console.log("Trutle advancing!!")
     //console.log(this.branchInstances.length)
 
      //let prevSF =  Math.exp(-this.currTurtle.prevDepth * this.decay) * this.radius;
