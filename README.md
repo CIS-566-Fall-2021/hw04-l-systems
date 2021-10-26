@@ -1,8 +1,8 @@
 Name: Haowei Li\
-Pennkey: lihaowei\
+Pennkey: lihaowei
 
 ## Description
-An alien plant on a volcano.
+An alien plant on a volcano. The plant sometimes looks like having arms and head.
 
 ## Live Demo
 https://hli605.github.io/hw04-l-systems/
