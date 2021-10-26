@@ -16783,7 +16783,7 @@ class ShaderProgram {
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].texImage2D(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].TEXTURE_2D, 0, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].RGBA, 1, 1, 0, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].RGBA, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].UNSIGNED_BYTE, new Uint8Array([0, 0, 255, 255]));
         // Asynchronously load an image
         var image = new Image();
-        image.src = "../textures/textures.png";
+        image.src = "./textures/textures.png";
         image.crossOrigin = "anonymous";
         console.log(image.src);
         image.addEventListener('load', function () {
