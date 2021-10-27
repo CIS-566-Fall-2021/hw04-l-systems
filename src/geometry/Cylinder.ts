@@ -240,7 +240,7 @@ class Cylinder extends Geometry {
   }
 
   create() {
-    this.transformUVs();
+    //this.transformUVs();
    // if(this.enabled) {
       let norm : Float32Array = Float32Array.from(this.normals);
       let pos : Float32Array = Float32Array.from(this.positions);

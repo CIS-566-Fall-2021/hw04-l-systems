@@ -34,6 +34,7 @@ class ShaderProgram {
   attrTransformW: number;
 
   attrUV: number;
+  attrUVCell: number;
 
   unifModel: WebGLUniformLocation;
   unifModelInvTr: WebGLUniformLocation;
@@ -72,6 +73,7 @@ class ShaderProgram {
     this.attrTransformY = gl.getAttribLocation(this.prog, "vs_TransformY");
     this.attrTransformZ = gl.getAttribLocation(this.prog, "vs_TransformZ");
     this.attrTransformW = gl.getAttribLocation(this.prog, "vs_TransformW");
+    this.attrUVCell = gl.getAttribLocation(this.prog, "vs_UVCell");
 
     this.attrUV = gl.getAttribLocation(this.prog, "vs_UV");
     this.unifModel      = gl.getUniformLocation(this.prog, "u_Model");
@@ -253,6 +255,12 @@ class ShaderProgram {
       gl.enableVertexAttribArray(this.attrTransformW);
       gl.vertexAttribPointer(this.attrTransformW, 4, gl.FLOAT, false, 0, 0);
       gl.vertexAttribDivisor(this.attrTransformW, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
+    if (this.attrUVCell != -1 && d.bindUVCell()) {
+      gl.enableVertexAttribArray(this.attrUVCell);
+      gl.vertexAttribPointer(this.attrUVCell, 1, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrUVCell, 1); // Advance 1 index in translate VBO for each drawn instance
     }
 
     if (this.attrUV != -1 && d.bindUV()) {

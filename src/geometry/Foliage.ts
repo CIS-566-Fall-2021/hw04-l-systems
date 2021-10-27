@@ -1,4 +1,4 @@
-import {vec3, vec4, mat4} from 'gl-matrix';
+import {vec2, vec3, vec4, mat4} from 'gl-matrix';
 import Drawable from '../rendering/gl/Drawable';
 import {gl} from '../globals';
 import Mesh from './Mesh';
@@ -50,7 +50,7 @@ class Foliage extends LSystem  {
     });
 
     this.charToAction.set('B', () => {
-      this.advanceTurtleBy(0.5);
+      this.advanceTurtleBy(1.0);
     });
 
     this.charToAction.set('>', () => {
@@ -148,7 +148,7 @@ class Foliage extends LSystem  {
 
     //let offset = sStep * 0.99;
     //this.currTurtle.prevDepth = this.currTurtle.depth;
-    this.currTurtle.depth += 1.0; //Math.max(0.2, Math.min(1.0 / (sF * 14), 0.7));
+    this.currTurtle.depth += frac; //Math.max(0.2, Math.min(1.0 / (sF * 14), 0.7));
     //vec3.copy(this.currTurtle.prevPosition, this.currTurtle.position); //Math.max(0.2, Math.min(1.0 / (sF * 14), 0.7));
     //vec3.scaleAndAdd(this.currTurtle.position, this.currTurtle.prevPosition, this.currTurtle.prevOrientation, offset);
    // this.currTurtle.prevOrientation = vec3.copy(this.currTurtle.prevOrientation, this.currTurtle.orientation); //Math.max(0.2, Math.min(1.0 / (sF * 14), 0.7));
@@ -160,8 +160,11 @@ class Foliage extends LSystem  {
 
     let transform = Utils.rightUpForwardTransformMatrix(center, 
       this.currTurtle.right, this.currTurtle.up, this.currTurtle.orientation, 
-      vec3.fromValues(sF, sF, sStep));
-    this.branchInstances.addTransform(transform);
+      vec3.fromValues(sF, sF, sStep *1.2));
+
+    let randTex = this.rand.random() * 4.0;
+    console.log(randTex)
+    this.branchInstances.addInstance(transform, randTex);
 
    // vec3.scaleAndAdd(this.currTurtle.position, this.currTurtle.position, step, 1);
 
@@ -204,10 +207,24 @@ class Foliage extends LSystem  {
     let rotMat = mat4.create();
     let step = vec3.fromValues(0,1,0);
     vec3.transformMat4(step, step, rotMat);
+
+    let avgR = vec3.create()
+    vec3.add(avgR, vec3.fromValues(1.0, 0.0, 0.0), this.currTurtle.right) 
+    vec3.scale(avgR, avgR, 0.5);
+
+    let avgU = vec3.create()
+    vec3.add(avgU, vec3.fromValues(0.0, 0.0, 1.0), this.currTurtle.up) 
+    vec3.scale(avgU, avgU, 0.5);
+
+    let avgF = vec3.create()
+    vec3.add(avgF, vec3.fromValues(0.0, 1.0, 0.0), this.currTurtle.orientation) 
+    vec3.scale(avgF, avgF, 0.5);
+
+
     let transform = Utils.rightUpForwardTransformMatrix(this.currTurtle.position, 
       this.currTurtle.right, this.currTurtle.up, this.currTurtle.orientation, 
       vec3.fromValues(this.leaf_size, this.leaf_size, this.leaf_size));
-    this.leafInstances.addTransform(transform);
+    this.leafInstances.addInstance(transform, 4.0);
 
     }
 
@@ -216,8 +233,10 @@ class Foliage extends LSystem  {
   }
 
   setAxiom() {
-   // this.axiom = 'AAAAAAAAAXY';
-  this.axiom = 'BBBByF';
+    // Orchid like
+    //this.axiom = 'AAAAyF';
+
+    this.axiom = 'B>BBF';
     //this.axiom = 'FFFFyyFyyFyyFyy+++yyyFy[FF]yy++[FF]+yF';
 
 
@@ -225,8 +244,15 @@ class Foliage extends LSystem  {
 
   fillCharExpansions() {
     console.log("orchids EXPANSION");
-    //this.charExpansions.set('F', 'F+++>>++F[yyFyyyF]+++++[<><<F++++<<<++F<<<<]++[-F>>F>>]+++[>>F>>>>F>>>]')
-    this.charExpansions.set('F', 'F<+++Fs[<F]')
+
+    //Orchid like
+    //this.charExpansions.set('F', 'F<+++Fs[<F]')
+
+    // Tree Like
+    this.charExpansions.set('F', 'ByBu[yyFyFs]+++[<><<FFs<<]++[-FFs>>]+++[>>F>>Fs>>>]')
+    //this.charExpansions.set('A', 'AA')
+
+
 
   //   this.charExpansions.set('X', '[ddd>>AsAsX]AA[+ddd<<<AsAsX]A[ddd---AsAsX]AAAs');
   //   this.charExpansions.set('Y', '[dd+dAsAsX][ddd-dAsAsX][dd>>dAsAsX]');

@@ -19,6 +19,8 @@ abstract class Geometry extends Drawable {
   columnZ: Float32Array; // Data for bufTranslate
   columnW: Float32Array; // Data for bufTranslate
 
+  uvCell: Float32Array; // Data for bufTranslate
+
   constructor() {
     super(); // Call the constructor of the super class. This is required.
     this.uv_cell = 3;
@@ -48,8 +50,13 @@ abstract class Geometry extends Drawable {
     this.columnY = new Float32Array(data.transformColumnY);
     this.columnZ = new Float32Array(data.transformColumnZ);
     this.columnW = new Float32Array(data.transformColumnW);
-  
+    this.uvCell = new Float32Array(data.uvCell);
+
+    console.log("uv cell" ,this.uvCell)
+    console.log("data size" ,data.size)
+
     this.generateTransform();
+    this.generateUVCell();
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformX);
     gl.bufferData(gl.ARRAY_BUFFER, this.columnX, gl.STATIC_DRAW);
@@ -59,11 +66,11 @@ abstract class Geometry extends Drawable {
     gl.bufferData(gl.ARRAY_BUFFER, this.columnZ, gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformW);
     gl.bufferData(gl.ARRAY_BUFFER, this.columnW, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUVCell);
+    gl.bufferData(gl.ARRAY_BUFFER, this.uvCell, gl.STATIC_DRAW);
 
-    console.log(this.bufTransformX)
-    console.log(this.bufTransformY)
-    console.log(this.bufTransformZ)
-    console.log(this.bufTransformW)
+    console.log("col x ha ndle", this.bufTransformX)
+    console.log("col y ha ndle", this.bufTransformY)
 
   }
 

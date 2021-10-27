@@ -1,4 +1,4 @@
-import {vec3, mat3, mat4} from 'gl-matrix';
+import {vec3, vec2, mat3, mat4} from 'gl-matrix';
 import * as DAT from 'dat-gui';
 import {setGL} from 'globals';
 
@@ -8,6 +8,8 @@ class InstancedData {
     transformColumnY : Array<number>;
     transformColumnZ : Array<number>;
     transformColumnW : Array<number>;
+    uvCell : Array<number>;
+
     size : number;
 
     constructor() {
@@ -16,6 +18,7 @@ class InstancedData {
         this.transformColumnY = new Array<number>()
         this.transformColumnZ = new Array<number>()
         this.transformColumnW = new Array<number>()
+        this.uvCell = new Array<number>()
 
     }
 
@@ -28,6 +31,20 @@ class InstancedData {
             this.transformColumnW.push(transform[12 + i]);
 
         }
+        this.uvCell.push(0.0);
+        this.size += 1;
+    }
+
+    addInstance(transform : mat4, uv_cell : number) {
+        // Push back rows in column major order
+        for (var i = 0; i < 4; i++) {
+            this.transformColumnX.push(transform[i]);
+            this.transformColumnY.push(transform[4 + i]);
+            this.transformColumnZ.push(transform[8 + i]);
+            this.transformColumnW.push(transform[12 + i]);
+
+        }
+        this.uvCell.push(uv_cell);
         this.size += 1;
     }
 

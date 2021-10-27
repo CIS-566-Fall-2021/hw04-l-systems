@@ -14,6 +14,7 @@ abstract class Drawable {
   bufTransformY: WebGLBuffer;
   bufTransformZ: WebGLBuffer;
   bufTransformW: WebGLBuffer;
+  bufUVCell: WebGLBuffer;
 
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
@@ -30,6 +31,7 @@ abstract class Drawable {
   transformYGenerated: boolean = false;
   transformZGenerated: boolean = false;
   transformWGenerated: boolean = false;
+  uvCellGenerated: boolean = false;
 
   uvGenerated: boolean = false;
 
@@ -106,6 +108,11 @@ abstract class Drawable {
   generateTransformW() {
     this.transformWGenerated = true;
     this.bufTransformW = gl.createBuffer();
+  }
+
+  generateUVCell() {
+    this.uvCellGenerated = true;
+    this.bufUVCell = gl.createBuffer();
   }
 
   generateUV() {
@@ -188,6 +195,14 @@ abstract class Drawable {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformW);
     }
     return this.transformWGenerated;
+  }
+
+
+  bindUVCell(): boolean {
+    if (this.uvCellGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUVCell);
+    }
+    return this.uvCellGenerated;
   }
 
   bindUV(): boolean {

@@ -39,7 +39,7 @@ class Square extends Geometry {
     this.uvs.push(0)
     this.uvs.push(1)
 
-    this.transformUVs()
+    //this.transformUVs()
 
     let uv : Float32Array = Float32Array.from(this.uvs);
 
@@ -50,9 +50,7 @@ class Square extends Geometry {
     this.generateScale();
     this.generatePos();
     this.generateNor();
-
     this.generateUV();
-
 
     this.count = indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
