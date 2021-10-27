@@ -2,6 +2,7 @@ import {vec3, mat4} from 'gl-matrix';
 import * as Stats from 'stats-js';
 import * as DAT from 'dat-gui';
 import Square from './geometry/Square';
+//import Drawable from './rendering/gl/Drawable';
 import ScreenQuad from './geometry/ScreenQuad';
 import OpenGLRenderer from './rendering/gl/OpenGLRenderer';
 import LSystemProcessor from './lsystem/lsystemprocessor'
@@ -10,17 +11,29 @@ import {gl, setGL} from './globals';
 import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 import Mesh from './geometry/Mesh';
 
+function loadFileSync(path:string) {
+  let request = new XMLHttpRequest();
+  request.open("GET", path, false);
+  request.send();
+  if (request.status !== 200) {
+    alert('Cannot load ' + path);
+  }
+
+  return request.responseText;
+}
+
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
 const controls = {
 };
 
-let square: Mesh;
+let square: Square;
 let screenQuad: ScreenQuad;
 let time: number = 0.0;
+let cylinderObj:string = null;
 
 function loadScene() {
-  square = new Mesh('', vec3.fromValues(0,0,0)); //new Square();
+  square = new Mesh(loadFileSync('./src/cylinder1.obj'), vec3.fromValues(0,0,0)); //new Square();
   square.create();
   screenQuad = new ScreenQuad();
   screenQuad.create();
@@ -30,9 +43,9 @@ function loadScene() {
   let proc = new LSystemProcessor(function(matTrans: mat4, type: string) {
     mats.push(matTrans);
     types.push(type);
-  }.bind(this), "1X");
+  }.bind(this), "FX");
   
-  let base = "[+++[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]]";
+  let base = "[+++[FX+FX--FX]&&[FX+FX--FX]&&[FX+FX--FX]&&[FX+FX--FX]&&[FX+FX--FX]&&[FX+FX--FX]&&[FX+FX--FX]&&[FX+FX--FX]&&[FX+FX--FX]]";
   let flowering = 
     "[++++[XF-XF-XF-XF]&&[XF-XF-XF-XF]&&[XF-XF-XF-XF]]" +
     "[+++[XF-XF-XF-XF]&&[XF-XF-XF-XF]&&[XF-XF-XF-XF]]" +
@@ -41,13 +54,13 @@ function loadScene() {
     "[---[XF+XF+XF+XF]&&[XF+XF+XF+XF]&&[XF+XF+XF+XF]]" +
     "[----[XF+XF+XF+XF]&&[XF+XF+XF+XF]&&[XF+XF+XF+XF]]";
 
-  proc.registerRule("X", "FFF2" +
+  proc.registerRule("X", "2" +
     base +
-    "1F2" + flowering);
-  proc.registerRule("F", "1GYFX1FX1G");
-  proc.registerRule("Y", "1HHHHY")
-  proc.registerRule("H", "[1+G-G-G+G]");
-  proc.stepMulti(2);
+    "F" + flowering);
+  proc.registerRule("F", "aaaa");
+  proc.registerRule("a", "bbbb");
+  proc.registerRule("b", "cccc");
+  proc.stepMulti(1);
   proc.draw();
 
   // Set up instanced rendering data arrays here.
@@ -91,8 +104,8 @@ function loadScene() {
       colorsArray.push(0);
       colorsArray.push(1.0);
     } else {
-      colorsArray.push(1);
-      colorsArray.push(0);
+      colorsArray.push(150 / 255);
+      colorsArray.push(75 / 255);
       colorsArray.push(0);
       colorsArray.push(1.0);
     }
@@ -143,12 +156,15 @@ function main() {
   // Initial call to load scene
   loadScene();
 
-  const camera = new Camera(vec3.fromValues(0, 0, -50), vec3.fromValues(0, 0, 0));
+  const camera = new Camera(vec3.fromValues(0, 0, -10), vec3.fromValues(0, 0, 0));
 
   const renderer = new OpenGLRenderer(canvas);
   renderer.setClearColor(0.2, 0.2, 0.2, 1);
   gl.enable(gl.BLEND);
-  gl.blendFunc(gl.ONE, gl.ONE); // Additive blending
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.blendEquation(gl.FUNC_ADD);
+
+  gl.enable(gl.DEPTH_TEST);
 
   const instancedShader = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/instanced-vert.glsl')),

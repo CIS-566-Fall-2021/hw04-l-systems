@@ -54,6 +54,7 @@ class ShaderProgram {
 
     this.attrPos = gl.getAttribLocation(this.prog, "vs_Pos");
     this.attrCol = gl.getAttribLocation(this.prog, "vs_Col");
+    this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
     this.attrTranslate = gl.getAttribLocation(this.prog, "vs_Translate");
     this.attrTrans1 = gl.getAttribLocation(this.prog, "vs_Trans1");
     this.attrTrans2 = gl.getAttribLocation(this.prog, "vs_Trans2");

@@ -6,6 +6,7 @@ class Square extends Drawable {
   indices: Uint32Array;
   positions: Float32Array;
   colors: Float32Array;
+  normals: Float32Array;
   transCol1: Float32Array;
   transCol2: Float32Array;
   transCol3: Float32Array;
@@ -36,6 +37,36 @@ class Square extends Drawable {
 
       20, 21, 22,
       20, 22, 23]);
+
+    this.normals = new Float32Array([0, 0, 1, 0,
+        0, 0, 1, 0,
+        0, 0, 1, 0,
+        0, 0, 1, 0,
+
+        0, 0, -1, 0,
+        0, 0, -1, 0,
+        0, 0, -1, 0,
+        0, 0, -1, 0,
+
+        1, 0, 0, 0,
+        1, 0, 0, 0,
+        1, 0, 0, 0,
+        1, 0, 0, 0,
+
+        -1, 0, 0, 0,
+        -1, 0, 0, 0,
+        -1, 0, 0, 0,
+        -1, 0, 0, 0,
+
+        0, 1, 0, 0,
+        0, 1, 0, 0,
+        0, 1, 0, 0,
+        0, 1, 0, 0,
+
+        0, -1, 0, 0,
+        0, -1, 0, 0,
+        0, -1, 0, 0,
+        0, -1, 0, 0]);
 
   this.positions = new Float32Array([
       -1, -1, 1, 1,
@@ -78,6 +109,7 @@ class Square extends Drawable {
     this.generateIdx();
     this.generatePos();
     this.generateCol();
+    this.generateNor();
     this.generateTrans1();
     this.generateTrans2();
     this.generateTrans3();
@@ -86,6 +118,9 @@ class Square extends Drawable {
     this.count = this.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufNor);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.normals, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
     gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
