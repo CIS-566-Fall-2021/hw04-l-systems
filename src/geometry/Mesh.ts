@@ -11,6 +11,11 @@ class Mesh extends Drawable {
   uvs: Float32Array;
   center: vec4;
 
+  transCol1: Float32Array;
+  transCol2: Float32Array;
+  transCol3: Float32Array;
+  transCol4: Float32Array;
+
   objString: string;
 
   constructor(objString: string, center: vec3) {
@@ -44,7 +49,7 @@ class Mesh extends Drawable {
 
     // white vert color for now
     this.colors = new Float32Array(posTemp.length);
-    for (var i = 0; i < posTemp.length; ++i){
+    for (var i = 0; i < posTemp.length; ++i) {
       this.colors[i] = 1.0;
     }
 
@@ -58,6 +63,10 @@ class Mesh extends Drawable {
     this.generateNor();
     this.generateUV();
     this.generateCol();
+    this.generateTrans1();
+    this.generateTrans2();
+    this.generateTrans3();
+    this.generateTrans4();
 
     this.count = this.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
@@ -77,6 +86,42 @@ class Mesh extends Drawable {
 
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
+  }
+
+  setInstanceVBOs(
+    transCol1: Float32Array,
+    transCol2: Float32Array,
+    transCol3: Float32Array,
+    transCol4: Float32Array,
+    colors: Float32Array) {
+    this.colors = colors;
+    this.transCol1 = transCol1;
+    this.transCol2 = transCol2;
+    this.transCol3 = transCol3;
+    this.transCol4 = transCol4;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+
+    if (!this.bindTrans1()) {
+      console.error("1st trans column not generated!");
+    };
+    gl.bufferData(gl.ARRAY_BUFFER, this.transCol1, gl.STATIC_DRAW);
+
+    if (!this.bindTrans2()) {
+      console.error("2nd trans column not generated!");
+    };
+    gl.bufferData(gl.ARRAY_BUFFER, this.transCol2, gl.STATIC_DRAW);
+
+    if (!this.bindTrans3()) {
+      console.error("3rd trans column not generated!");
+    };
+    gl.bufferData(gl.ARRAY_BUFFER, this.transCol3, gl.STATIC_DRAW);
+
+    if (!this.bindTrans4()) {
+      console.error("4th trans column not generated!");
+    };
+    gl.bufferData(gl.ARRAY_BUFFER, this.transCol4, gl.STATIC_DRAW);
   }
 };
 

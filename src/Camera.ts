@@ -18,7 +18,8 @@ class Camera {
 
   constructor(position: vec3, target: vec3) {
     const canvas = <HTMLCanvasElement> document.getElementById('canvas');
-
+    this.position = position;
+    this.target = target;
     this.controls = CameraControls(canvas, {
       position: position,
       center: target,

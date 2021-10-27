@@ -1,52 +1,111 @@
-import {vec3} from 'gl-matrix';
+import {vec3, mat4} from 'gl-matrix';
 import * as Stats from 'stats-js';
 import * as DAT from 'dat-gui';
 import Square from './geometry/Square';
 import ScreenQuad from './geometry/ScreenQuad';
 import OpenGLRenderer from './rendering/gl/OpenGLRenderer';
+import LSystemProcessor from './lsystem/lsystemprocessor'
 import Camera from './Camera';
-import {setGL} from './globals';
+import {gl, setGL} from './globals';
 import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
+import Mesh from './geometry/Mesh';
 
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
 const controls = {
 };
 
-let square: Square;
+let square: Mesh;
 let screenQuad: ScreenQuad;
 let time: number = 0.0;
 
 function loadScene() {
-  square = new Square();
+  square = new Mesh('', vec3.fromValues(0,0,0)); //new Square();
   square.create();
   screenQuad = new ScreenQuad();
   screenQuad.create();
+
+  let mats: Array<mat4> = [];
+  let types: Array<string> = [];
+  let proc = new LSystemProcessor(function(matTrans: mat4, type: string) {
+    mats.push(matTrans);
+    types.push(type);
+  }.bind(this), "1X");
+  
+  let base = "[+++[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]&[FX+FX--FX]]";
+  let flowering = 
+    "[++++[XF-XF-XF-XF]&&[XF-XF-XF-XF]&&[XF-XF-XF-XF]]" +
+    "[+++[XF-XF-XF-XF]&&[XF-XF-XF-XF]&&[XF-XF-XF-XF]]" +
+    "[++[XF-XF-XF-XF]&&[XF-XF-XF-XF]&&[XF-XF-XF-XF]]" +
+    "[-[XF+XF+XF+XF]&&[XF+XF+XF+XF]&&[XF+XF+XF+XF]]" +
+    "[---[XF+XF+XF+XF]&&[XF+XF+XF+XF]&&[XF+XF+XF+XF]]" +
+    "[----[XF+XF+XF+XF]&&[XF+XF+XF+XF]&&[XF+XF+XF+XF]]";
+
+  proc.registerRule("X", "FFF2" +
+    base +
+    "1F2" + flowering);
+  proc.registerRule("F", "1GYFX1FX1G");
+  proc.registerRule("Y", "1HHHHY")
+  proc.registerRule("H", "[1+G-G-G+G]");
+  proc.stepMulti(2);
+  proc.draw();
 
   // Set up instanced rendering data arrays here.
   // This example creates a set of positional
   // offsets and gradiated colors for a 100x100 grid
   // of squares, even though the VBO data for just
   // one square is actually passed to the GPU
-  let offsetsArray = [];
-  let colorsArray = [];
-  let n: number = 100.0;
-  for(let i = 0; i < n; i++) {
-    for(let j = 0; j < n; j++) {
-      offsetsArray.push(i);
-      offsetsArray.push(j);
-      offsetsArray.push(0);
+  let trans1Array:Array<number> = [];
+  let trans2Array:Array<number>  = [];
+  let trans3Array:Array<number>  = [];
+  let trans4Array:Array<number>  = [];
 
-      colorsArray.push(i / n);
-      colorsArray.push(j / n);
+  let colorsArray = [];
+  let n: number = 20.0;
+  for (let i = 0; i < mats.length; i++) {
+    let trans = mats[i];
+    let type = types[i];
+    trans1Array.push(trans[0]);
+    trans1Array.push(trans[1]);
+    trans1Array.push(trans[2]);
+    trans1Array.push(trans[3]);
+
+    trans2Array.push(trans[4]);
+    trans2Array.push(trans[5]);
+    trans2Array.push(trans[6]);
+    trans2Array.push(trans[7]);
+
+    trans3Array.push(trans[8]);
+    trans3Array.push(trans[9]);
+    trans3Array.push(trans[10]);
+    trans3Array.push(trans[11]);
+
+    trans4Array.push(trans[12]);
+    trans4Array.push(trans[13]);
+    trans4Array.push(trans[14]);
+    trans4Array.push(trans[15]);
+
+    if (type === "leaf") {
+      colorsArray.push(0);
       colorsArray.push(1.0);
-      colorsArray.push(1.0); // Alpha channel
+      colorsArray.push(0);
+      colorsArray.push(1.0);
+    } else {
+      colorsArray.push(1);
+      colorsArray.push(0);
+      colorsArray.push(0);
+      colorsArray.push(1.0);
     }
   }
-  let offsets: Float32Array = new Float32Array(offsetsArray);
+
   let colors: Float32Array = new Float32Array(colorsArray);
-  square.setInstanceVBOs(offsets, colors);
-  square.setNumInstances(n * n); // grid of "particles"
+  square.setInstanceVBOs(
+    new Float32Array(trans1Array),
+    new Float32Array(trans2Array),
+    new Float32Array(trans3Array),
+    new Float32Array(trans4Array),
+    colors);
+  square.setNumInstances(mats.length); // grid of "particles"
 }
 
 function main() {
@@ -63,10 +122,20 @@ function main() {
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
-  const gl = <WebGL2RenderingContext> canvas.getContext('webgl2');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const gl:WebGL2RenderingContext = <WebGL2RenderingContext> canvas.getContext('webgl2');
+  //const c2d = <CanvasRenderingContext2D> canvas.getContext("2d");
   if (!gl) {
     alert('WebGL 2 not supported!');
   }
+
+  // c2d.beginPath(); 
+  // c2d.moveTo(300, 300);
+  // c2d.lineTo(400, 400);
+  // c2d.stroke();
+
+  // return;
   // `setGL` is a function imported above which sets the value of `gl` in the `globals.ts` module.
   // Later, we can import `gl` from `globals.ts` to access it
   setGL(gl);
@@ -74,7 +143,7 @@ function main() {
   // Initial call to load scene
   loadScene();
 
-  const camera = new Camera(vec3.fromValues(50, 50, 10), vec3.fromValues(50, 50, 0));
+  const camera = new Camera(vec3.fromValues(0, 0, -50), vec3.fromValues(0, 0, 0));
 
   const renderer = new OpenGLRenderer(canvas);
   renderer.setClearColor(0.2, 0.2, 0.2, 1);
@@ -99,7 +168,7 @@ function main() {
     flat.setTime(time++);
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
-    renderer.render(camera, flat, [screenQuad]);
+    //renderer.render(camera, flat, [screenQuad]);
     renderer.render(camera, instancedShader, [
       square,
     ]);
