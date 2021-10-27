@@ -26,12 +26,18 @@ class ShaderProgram {
   attrCol: number; // This time, it's an instanced rendering attribute, so each particle can have a unique color. Not per-vertex, but per-instance.
   attrTranslate: number; // Used in the vertex shader during instanced rendering to offset the vertex positions to the particle's drawn position.
   attrUV: number;
+  attrRotateCol0: number;
+  attrRotateCol1: number;
+  attrRotateCol2: number;
+  attrRotateCol3: number;
+  attrScale: number;
 
   unifModel: WebGLUniformLocation;
   unifModelInvTr: WebGLUniformLocation;
   unifViewProj: WebGLUniformLocation;
   unifCameraAxes: WebGLUniformLocation;
   unifTime: WebGLUniformLocation;
+  unifColor: WebGLUniformLocation;
   unifRef: WebGLUniformLocation;
   unifEye: WebGLUniformLocation;
   unifUp: WebGLUniformLocation;
@@ -49,14 +55,21 @@ class ShaderProgram {
     }
 
     this.attrPos = gl.getAttribLocation(this.prog, "vs_Pos");
+    this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
     this.attrCol = gl.getAttribLocation(this.prog, "vs_Col");
     this.attrTranslate = gl.getAttribLocation(this.prog, "vs_Translate");
     this.attrUV = gl.getAttribLocation(this.prog, "vs_UV");
+    this.attrRotateCol0 = gl.getAttribLocation(this.prog, "vs_transform_col0");
+    this.attrRotateCol1 = gl.getAttribLocation(this.prog, "vs_transform_col1");
+    this.attrRotateCol2 = gl.getAttribLocation(this.prog, "vs_transform_col2");
+    this.attrRotateCol3 = gl.getAttribLocation(this.prog, "vs_transform_col3");
+    this.attrScale = gl.getAttribLocation(this.prog, "vs_Scale");
     this.unifModel      = gl.getUniformLocation(this.prog, "u_Model");
     this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
     this.unifViewProj   = gl.getUniformLocation(this.prog, "u_ViewProj");
     this.unifCameraAxes      = gl.getUniformLocation(this.prog, "u_CameraAxes");
     this.unifTime      = gl.getUniformLocation(this.prog, "u_Time");
+    this.unifColor      = gl.getUniformLocation(this.prog, "u_Color");
     this.unifEye   = gl.getUniformLocation(this.prog, "u_Eye");
     this.unifRef   = gl.getUniformLocation(this.prog, "u_Ref");
     this.unifUp   = gl.getUniformLocation(this.prog, "u_Up");
@@ -124,6 +137,13 @@ class ShaderProgram {
     }
   }
 
+  setColor(color: vec3) {
+    this.use();
+    if (this.unifColor !== -1) {
+      gl.uniform3fv(this.unifColor, color);
+    }
+  }
+
   draw(d: Drawable) {
     this.use();
 
@@ -155,6 +175,36 @@ class ShaderProgram {
       gl.enableVertexAttribArray(this.attrUV);
       gl.vertexAttribPointer(this.attrUV, 2, gl.FLOAT, false, 0, 0);
       gl.vertexAttribDivisor(this.attrUV, 0); // Advance 1 index in pos VBO for each vertex
+    }
+
+    if (this.attrRotateCol0 != -1 && d.bindRotationCol0()) {
+      gl.enableVertexAttribArray(this.attrRotateCol0);
+      gl.vertexAttribPointer(this.attrRotateCol0, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrRotateCol0, 1);
+    }
+
+    if (this.attrRotateCol1 != -1 && d.bindRotationCol1()) {
+      gl.enableVertexAttribArray(this.attrRotateCol1);
+      gl.vertexAttribPointer(this.attrRotateCol1, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrRotateCol1, 1);
+    }
+
+    if (this.attrRotateCol2 != -1 && d.bindRotationCol2()) {
+      gl.enableVertexAttribArray(this.attrRotateCol2);
+      gl.vertexAttribPointer(this.attrRotateCol2, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrRotateCol2, 1);
+    }
+
+    if (this.attrRotateCol3 != -1 && d.bindRotationCol3()) {
+      gl.enableVertexAttribArray(this.attrRotateCol3);
+      gl.vertexAttribPointer(this.attrRotateCol3, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrRotateCol3, 1);
+    }
+
+    if (this.attrScale != -1 && d.bindScale()) {
+      gl.enableVertexAttribArray(this.attrScale);
+      gl.vertexAttribPointer(this.attrScale, 3, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrScale, 1);
     }
 
     // TODO: Set up attribute data for additional instanced rendering data as needed

@@ -10,6 +10,7 @@ class Mesh extends Drawable {
   colors: Float32Array;
   uvs: Float32Array;
   center: vec4;
+  offsets: Float32Array; // Data for bufTranslate
 
   objString: string;
 
@@ -45,13 +46,17 @@ class Mesh extends Drawable {
     // white vert color for now
     this.colors = new Float32Array(posTemp.length);
     for (var i = 0; i < posTemp.length; ++i){
-      this.colors[i] = 1.0;
+      this.colors[i] = .5;
     }
 
     this.indices = new Uint32Array(idxTemp);
     this.normals = new Float32Array(norTemp);
     this.positions = new Float32Array(posTemp);
     this.uvs = new Float32Array(uvsTemp);
+
+    console.log("indicies " + this.indices.length);
+    console.log("normals " + this.normals.length);
+    console.log("positions " + this.positions.length);
 
     this.generateIdx();
     this.generatePos();
@@ -77,6 +82,49 @@ class Mesh extends Drawable {
 
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
+  }
+
+  setInstanceVBOs(offsets: Float32Array, colors: Float32Array) {
+    this.colors = colors;
+    this.offsets = offsets;
+
+    this.generateTranslate();
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTranslate);
+    gl.bufferData(gl.ARRAY_BUFFER, this.offsets, gl.STATIC_DRAW);
+  }
+
+  setColorsVBOs(colors: Float32Array) {
+    this.colors = colors;
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+  }
+
+  setRotateVBOs(col0: Float32Array, col1: Float32Array, col2: Float32Array, col3: Float32Array) {
+    this.generateRotationCol0();
+    this.generateRotationCol1();
+    this.generateRotationCol2();
+    this.generateRotationCol3();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRotateCol0);
+    gl.bufferData(gl.ARRAY_BUFFER, col0, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRotateCol1);
+    gl.bufferData(gl.ARRAY_BUFFER, col1, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRotateCol2);
+    gl.bufferData(gl.ARRAY_BUFFER, col2, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRotateCol3);
+    gl.bufferData(gl.ARRAY_BUFFER, col3, gl.STATIC_DRAW);
+  }
+
+  setScaleVBO(scale: Float32Array) {
+    this.generateScale();
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufScale);
+    gl.bufferData(gl.ARRAY_BUFFER, scale, gl.STATIC_DRAW);
   }
 };
 
