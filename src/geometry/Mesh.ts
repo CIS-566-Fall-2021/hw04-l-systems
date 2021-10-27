@@ -10,6 +10,8 @@ class Mesh extends Drawable {
   colors: Float32Array;
   uvs: Float32Array;
   center: vec4;
+  offsets: Float32Array;
+  rotations: Float32Array;
 
   objString: string;
 
@@ -77,6 +79,19 @@ class Mesh extends Drawable {
 
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
+  }
+
+  setInstanceVBOs(offsets: Float32Array, colors: Float32Array, rotations: Float32Array) {
+    this.colors = colors;
+    this.offsets = offsets;
+    this.rotations = rotations;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTranslate);
+    gl.bufferData(gl.ARRAY_BUFFER, this.offsets, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRotation);
+    gl.bufferData(gl.ARRAY_BUFFER, this.rotations, gl.STATIC_DRAW);
   }
 };
 
