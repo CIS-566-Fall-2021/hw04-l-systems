@@ -17331,57 +17331,22 @@ class Foliage extends __WEBPACK_IMPORTED_MODULE_1__LSystem__["a" /* default */] 
         0;
     }
     advanceTurtleBy(frac) {
-        //console.log(this.branchInstances.length)
-        //let prevSF =  Math.exp(-this.currTurtle.prevDepth * this.decay) * this.radius;
         let sF = Math.exp(-this.currTurtle.depth * this.decay) * this.radius;
         let sStep = this.randomStep();
-        // prevSF = Math.min(prevSF, this.radius);
-        // sF = Math.min(sF, this.radius);
-        // prevSF = Math.max(prevSF, 0.005);
-        // sF = Math.max(sF, 0.005);
-        //sStep = Math.min(sStep, 1);
-        //let mesh = new Mesh('/geo/stem.obj', vec3.clone(this.currTurtle.position), vec3.fromValues(sF,sStep,sF), 
-        // let mesh = new Cylinder();
-        // mesh.smoothshade = this.smoothshading;
-        // mesh.m_color = vec4.fromValues(0.29,0.17,0.11,1);
-        // mesh.assignFaceCenters(this.currTurtle.prevPosition, this.currTurtle.position);
-        // mesh.assignFaceScaleUniform(prevSF, sF);
-        // mesh.assignFaceRotations(this.currTurtle.prevOrientation, this.currTurtle.orientation);
-        // mesh.assignFaceRotations(vec3.create(), vec3.create())
-        //mesh.assignFaceRotations(prevSF, sF);
-        // mesh.loadMesh();
-        //console.log(mesh);
-        //mesh.debug = true
-        //this.fullMesh.transformAndAppend(mesh,mesh);
-        //let sStep = 10.0 * this.height;
         let nextPos = __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].create();
         __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].scaleAndAdd(nextPos, this.currTurtle.position, this.currTurtle.orientation, sStep);
-        //let offset = sStep * 0.99;
-        //this.currTurtle.prevDepth = this.currTurtle.depth;
         this.currTurtle.depth += frac; //Math.max(0.2, Math.min(1.0 / (sF * 14), 0.7));
-        //vec3.copy(this.currTurtle.prevPosition, this.currTurtle.position); //Math.max(0.2, Math.min(1.0 / (sF * 14), 0.7));
-        //vec3.scaleAndAdd(this.currTurtle.position, this.currTurtle.prevPosition, this.currTurtle.prevOrientation, offset);
-        // this.currTurtle.prevOrientation = vec3.copy(this.currTurtle.prevOrientation, this.currTurtle.orientation); //Math.max(0.2, Math.min(1.0 / (sF * 14), 0.7));
         let center = __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].create();
         __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].add(center, this.currTurtle.position, nextPos);
         __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].scale(center, center, 0.5);
         __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].copy(this.currTurtle.position, nextPos);
         let transform = __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].rightUpForwardTransformMatrix(center, this.currTurtle.right, this.currTurtle.up, this.currTurtle.orientation, __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].fromValues(sF, sF, sStep * 1.2));
         let randTex = Math.floor(this.rand.random() * 5.0);
-        //console.log(randTex)
         this.branchInstances.addInstance(transform, randTex);
-        // vec3.scaleAndAdd(this.currTurtle.position, this.currTurtle.position, step, 1);
     }
     advanceTurtleOld(frac) {
-        //let sF = Math.max(this.radius - Math.exp(0.7 * this.currTurtle.depth * this.decay), 0.01);
         let sF = Math.exp(-this.currTurtle.depth * this.decay) * this.radius;
-        //sF = Math.max(this.radius - this.currTurtle.depth * this.decay, 0.01);
         let sStep = Math.exp(-this.currTurtle.depth * this.stepDecay) * this.height;
-        //sStep = Math.min(sStep, 1);
-        /*
-        let mesh = new Mesh('/geo/stem.obj', vec3.clone(this.currTurtle.position), vec3.fromValues(sF,sStep,sF),
-        vec3.clone(this.currTurtle.orientation), vec4.fromValues(0.29,0.17,0.11,1));*/
-        // this.fullMesh.transformAndAppend(this.meshNames.get("stem"), mesh);
         let rotMat = __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["b" /* mat4 */].create();
         __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["b" /* mat4 */].rotateX(rotMat, rotMat, this.currTurtle.orientation[0] * Math.PI / 180);
         __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["b" /* mat4 */].rotateY(rotMat, rotMat, this.currTurtle.orientation[1] * Math.PI / 180);
