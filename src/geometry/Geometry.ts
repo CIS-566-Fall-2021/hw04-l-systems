@@ -52,8 +52,8 @@ abstract class Geometry extends Drawable {
     this.columnW = new Float32Array(data.transformColumnW);
     this.uvCell = new Float32Array(data.uvCell);
 
-    console.log("uv cell" ,this.uvCell)
-    console.log("data size" ,data.size)
+    //console.log("uv cell" ,this.uvCell)
+   // console.log("data size" ,data.size)
 
     this.generateTransform();
     this.generateUVCell();
@@ -69,8 +69,8 @@ abstract class Geometry extends Drawable {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUVCell);
     gl.bufferData(gl.ARRAY_BUFFER, this.uvCell, gl.STATIC_DRAW);
 
-    console.log("col x ha ndle", this.bufTransformX)
-    console.log("col y ha ndle", this.bufTransformY)
+   // console.log("col x ha ndle", this.bufTransformX)
+   // console.log("col y ha ndle", this.bufTransformY)
 
   }
 

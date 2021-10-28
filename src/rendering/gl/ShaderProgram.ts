@@ -42,8 +42,10 @@ class ShaderProgram {
   unifCameraAxes: WebGLUniformLocation;
   unifTime: WebGLUniformLocation;
   unifTexture: WebGLUniformLocation;
-  texture:WebGLUniformLocation;
+  unifNormalMap: WebGLUniformLocation;
 
+  texture:WebGLUniformLocation;
+  normalMap:WebGLUniformLocation;
 
   unifRef: WebGLUniformLocation;
   unifEye: WebGLUniformLocation;
@@ -84,8 +86,10 @@ class ShaderProgram {
     this.unifEye   = gl.getUniformLocation(this.prog, "u_Eye");
     this.unifRef   = gl.getUniformLocation(this.prog, "u_Ref");
     this.unifUp   = gl.getUniformLocation(this.prog, "u_Up");
+    this.unifDimensions   = gl.getUniformLocation(this.prog, "u_Dimensions");
 
     this.unifTexture     = gl.getUniformLocation(this.prog, "u_Texture");
+    this.unifNormalMap    = gl.getUniformLocation(this.prog, "u_NormalMap");
 
   }
 
@@ -100,11 +104,22 @@ class ShaderProgram {
     return (value & (value - 1)) === 0;
   }
   
-  
-  createTexture() {
+  setBaseColorTexture(url:string) {
     this.use();
-    // setting up texture in OpenGL
+    this.texture = this.createTexture(url)
+    gl.uniform1i(this.unifTexture, 0);
+
+  }
+
+  setNormalMapTexture(url:string) {
+    this.use();
+    this.normalMap = this.createTexture(url)
+    gl.uniform1i(this.unifNormalMap, 1);
+
+  }
   
+  createTexture(url:string) {
+    // setting up texture in OpenGL
     let texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
     // Fill the texture with a 1x1 blue pixel.
@@ -112,7 +127,7 @@ class ShaderProgram {
                   new Uint8Array([0, 0, 255, 255]));
     // Asynchronously load an image
     var image = new Image();
-    image.src = "./textures/textures.png";
+    image.src = url;
     image.crossOrigin = "anonymous";
   
     console.log(image.src);
@@ -133,9 +148,7 @@ class ShaderProgram {
       }
     });
   
-    this.texture = texture;
-    
-    gl.uniform1i(this.unifTexture, 0);
+    return texture;
   
   }
 
@@ -274,6 +287,15 @@ class ShaderProgram {
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
       gl.uniform1i(this.unifTexture, 0);
     }
+
+    if (this.unifNormalMap != -1) {
+      gl.activeTexture(gl.TEXTURE1); //GL supports up to 32 different active textures at once(0 - 31)
+      gl.bindTexture(gl.TEXTURE_2D, this.normalMap);
+      gl.uniform1i(this.unifNormalMap, 1);
+    }
+
+   //  console.log("unif normal map "+ this.unifNormalMap)
+   // console.log("unifTexture "+ this.unifTexture)
 
     // TODO: Set up attribute data for additional instanced rendering data as needed
 

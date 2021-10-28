@@ -191,7 +191,7 @@ class LSystem  {
 
   
   fillCharExpansions() {
-    console.log("regular EXPANSION");
+    //console.log("regular EXPANSION");
 
     this.charExpansions.set('X', 'X.>>[X[.F].>F.F[XF]FX]');
   }

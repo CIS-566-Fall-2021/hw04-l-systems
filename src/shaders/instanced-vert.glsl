@@ -28,10 +28,11 @@ in float vs_UVCell;
 out vec4 fs_Col;
 out vec4 fs_Pos;
 out vec4 fs_Nor;
+out mat3 fs_TBN;
 
 vec2 transformUV()
 {
-    float tex_divs = 10.0;
+    float tex_divs = 5.0;
     float uv_scale = 1.0 / tex_divs;
     float cel_y = uv_scale * floor(vs_UVCell * uv_scale);
     float cel_x = uv_scale * (mod(vs_UVCell, tex_divs));
@@ -52,6 +53,11 @@ void main()
     
     fs_Pos = modelPos;
 
-    fs_Nor = transform * vs_Nor;
+    vec4 normal = normalize(transform * vs_Nor);
+    fs_Nor = normal;
+    vec3 tangent = normalize(cross(vec3(0,1,0),normal.xyz));
+    vec3 bitangent = normalize(cross(normal.xyz, tangent));
+    fs_TBN = mat3(tangent, bitangent, normal);
+    
     gl_Position = u_ViewProj * modelPos;
 }

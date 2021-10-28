@@ -74,7 +74,7 @@ function loadScene() {
   fallingLeaves.create();
 
 
-  console.log(cylinder.count)
+  //console.log(cylinder.count)
   screenQuad = new ScreenQuad();
   screenQuad.create();
 
@@ -149,13 +149,13 @@ function loadScene() {
   cylinder.setInstanceVBOs(l_system.branchInstances);
   cylinder.setNumInstances(l_system.branchInstances.size); // grid of "particles"
 
-  console.log(l_system.branchInstances)
-  console.log(l_system.branchInstances.size)
+ // console.log(l_system.branchInstances)
+  //console.log(l_system.branchInstances.size)
 
   square.setInstanceVBOs(l_system.leafInstances);
   square.setNumInstances(l_system.leafInstances.size); // grid of "particles"
 
-  console.log(l_system.leafInstances)
+ //console.log(l_system.leafInstances)
 
   let fallingLeavesInstance = new InstancedData();
 
@@ -169,7 +169,7 @@ function loadScene() {
       identity = mat4.create()
       mat4.translate(identity, identity, vec3.fromValues(i + offsetX, j + offsetY, k + offsetZ))
       mat4.scale(identity, identity, vec3.fromValues(2.0,2.0,2.0))
-      let randTex = 10.0 + l_system.rand.random() * 3.0;
+      let randTex = Math.floor(5.0 + l_system.rand.random() * 10.0);
       fallingLeavesInstance.addInstance(identity,randTex);
       }
     }
@@ -195,7 +195,7 @@ function main() {
   // Add controls to the gui
   const gui = new DAT.GUI();
   //gui.add(controls, 'tesselations', 0, 8).step(1);
-  gui.add(controls, 'iterations', 1, 8).step(1)
+  gui.add(controls, 'iterations', 1, 5).step(1)
   gui.add(controls, 'Rotational Noise', 0, 100).step(1)
   //gui.add(controls, 'Step Noise', 0, 1).step(0.01)
   gui.add(controls, 'Radial Decay', -1, 3).step(0.01)
@@ -207,13 +207,13 @@ function main() {
   gui.add(controls, 'Seed');
 
   //gui.add(controls, 'Offset', -10, 10).step(0.01);
-  gui.add(controls, 'Smooth Shading');
+ // gui.add(controls, 'Smooth Shading');
   gui.add(controls, 'Load Scene');
 
   //gui.add(controls, 'Export OBJ');
 
-  let debug = gui.addFolder("Debug");
-  debug.add(controls,'Animate Camera')
+ // let debug = gui.addFolder("Debug");
+ // debug.add(controls,'Animate Camera')
 
   // get canvas and webgl context
   const canvas = <HTMLCanvasElement> document.getElementById('canvas');
@@ -231,7 +231,7 @@ function main() {
   const camera = new Camera(vec3.fromValues(0, 18, 43), vec3.fromValues(0, 18, 0));
 
   const renderer = new OpenGLRenderer(canvas);
-  renderer.setClearColor(0.2, 0.2, 0.2, 1);
+  renderer.setClearColor(0.71, 0.70, 0.62, 1);
 
   gl.enable(gl.DEPTH_TEST);
   //gl.enable(gl.BLEND);
@@ -247,14 +247,20 @@ function main() {
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/particles-frag.glsl')),
   ]);
 
-  instancedShader.createTexture()
-  particleShader.createTexture()
+  instancedShader.setBaseColorTexture("./textures/textures.png")
+  instancedShader.setNormalMapTexture("./textures/normal.png")
+
+  particleShader.setBaseColorTexture("./textures/textures.png")
+  particleShader.setNormalMapTexture("./textures/normal.png")
+
 
   const flat = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/flat-vert.glsl')),
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/flat-frag.glsl')),
   ]);
   
+  flat.setBaseColorTexture("./textures/background.png")
+
   // This function will be called every frame
   function tick() {
     camera.update();
@@ -265,7 +271,8 @@ function main() {
     flat.setTime(time++);
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
-    //renderer.render(camera, flat, [screenQuad]);
+    
+    renderer.render(camera, flat, [screenQuad]);
     renderer.render(camera, instancedShader, [
       cylinder,
       square

@@ -105,11 +105,13 @@ class Foliage extends LSystem  {
     });
 
     this.charToAction.set('s', () => {
-      this.sproutLeaf();
+      let tex = Math.floor(5.0 + this.rand.random() * 5.0);
+      this.sproutLeaf(tex);
     });
 
     this.charToAction.set('l', () => {
-      this.sproutLeaf();
+      let tex = Math.floor(5.0 + this.rand.random() * 5.0);
+      this.sproutLeaf(tex);
     });0
   }
 
@@ -162,8 +164,8 @@ class Foliage extends LSystem  {
       this.currTurtle.right, this.currTurtle.up, this.currTurtle.orientation, 
       vec3.fromValues(sF, sF, sStep *1.2));
 
-    let randTex = this.rand.random() * 4.0;
-    console.log(randTex)
+    let randTex = Math.floor(this.rand.random() * 5.0);
+    //console.log(randTex)
     this.branchInstances.addInstance(transform, randTex);
 
    // vec3.scaleAndAdd(this.currTurtle.position, this.currTurtle.position, step, 1);
@@ -197,7 +199,7 @@ class Foliage extends LSystem  {
 
   }
 
-  sproutLeaf() {    
+  sproutLeaf(texCell = 4.0) {    
     let stoch = vec3.create()
     vec3.random(stoch)
     vec3.scale(stoch,stoch, 20)
@@ -207,24 +209,10 @@ class Foliage extends LSystem  {
     let rotMat = mat4.create();
     let step = vec3.fromValues(0,1,0);
     vec3.transformMat4(step, step, rotMat);
-
-    let avgR = vec3.create()
-    vec3.add(avgR, vec3.fromValues(1.0, 0.0, 0.0), this.currTurtle.right) 
-    vec3.scale(avgR, avgR, 0.5);
-
-    let avgU = vec3.create()
-    vec3.add(avgU, vec3.fromValues(0.0, 0.0, 1.0), this.currTurtle.up) 
-    vec3.scale(avgU, avgU, 0.5);
-
-    let avgF = vec3.create()
-    vec3.add(avgF, vec3.fromValues(0.0, 1.0, 0.0), this.currTurtle.orientation) 
-    vec3.scale(avgF, avgF, 0.5);
-
-
     let transform = Utils.rightUpForwardTransformMatrix(this.currTurtle.position, 
       this.currTurtle.right, this.currTurtle.up, this.currTurtle.orientation, 
       vec3.fromValues(this.leaf_size, this.leaf_size, this.leaf_size));
-    this.leafInstances.addInstance(transform, 4.0);
+    this.leafInstances.addInstance(transform, texCell);
 
     }
 
@@ -243,13 +231,13 @@ class Foliage extends LSystem  {
   }
 
   fillCharExpansions() {
-    console.log("orchids EXPANSION");
+   // console.log("orchids EXPANSION");
 
     //Orchid like
     //this.charExpansions.set('F', 'F<+++Fs[<F]')
 
     // Tree Like
-    this.charExpansions.set('F', 'ByBu[yyFyFs]+++[<><<FFs<<]++[-FFs>>]+++[>>F>>Fs>>>]')
+    this.charExpansions.set('F', 'ByBu[yyFyFs]+++[<><<FFl<<]++[-FFl>>]+++[>>F>>Fs>>>]')
     //this.charExpansions.set('A', 'AA')
 
 

@@ -51,15 +51,15 @@ mat4 rotationAxisAngle( vec3 v, float a )
 
 vec2 transformUV()
 {
-    float tex_divs = 10.0;
+    float tex_divs = 5.0;
     float uv_scale = 1.0 / tex_divs;
     float cel_y = uv_scale * floor(vs_UVCell * uv_scale);
-    float cel_x = uv_scale * (mod(vs_UVCell, tex_divs));
+    float cel_x = uv_scale * floor(mod(vs_UVCell, tex_divs));
     float nextcel_y = uv_scale * floor(vs_UVCell * uv_scale + 1.0);
     vec2 transformedUV = vs_UV;
     transformedUV *= uv_scale;
     transformedUV += vec2(cel_x, cel_y);
-    transformedUV.y = min(transformedUV.y, nextcel_y - 0.007);
+    //transformedUV.y = min(transformedUV.y, nextcel_y - 0.007);
     return transformedUV;
 }
 
