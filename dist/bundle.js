@@ -5436,8 +5436,8 @@ class Geometry extends __WEBPACK_IMPORTED_MODULE_0__rendering_gl_Drawable__["a" 
         this.columnZ = new Float32Array(data.transformColumnZ);
         this.columnW = new Float32Array(data.transformColumnW);
         this.uvCell = new Float32Array(data.uvCell);
-        console.log("uv cell", this.uvCell);
-        console.log("data size", data.size);
+        //console.log("uv cell" ,this.uvCell)
+        // console.log("data size" ,data.size)
         this.generateTransform();
         this.generateUVCell();
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindBuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].ARRAY_BUFFER, this.bufTransformX);
@@ -5450,8 +5450,8 @@ class Geometry extends __WEBPACK_IMPORTED_MODULE_0__rendering_gl_Drawable__["a" 
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bufferData(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].ARRAY_BUFFER, this.columnW, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].STATIC_DRAW);
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bindBuffer(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].ARRAY_BUFFER, this.bufUVCell);
         __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].bufferData(__WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].ARRAY_BUFFER, this.uvCell, __WEBPACK_IMPORTED_MODULE_1__globals__["a" /* gl */].STATIC_DRAW);
-        console.log("col x ha ndle", this.bufTransformX);
-        console.log("col y ha ndle", this.bufTransformY);
+        // console.log("col x ha ndle", this.bufTransformX)
+        // console.log("col y ha ndle", this.bufTransformY)
     }
 }
 ;
@@ -6334,7 +6334,7 @@ function loadScene() {
     fallingLeaves = new __WEBPACK_IMPORTED_MODULE_3__geometry_Square__["a" /* default */]();
     fallingLeaves.uv_cell = 3;
     fallingLeaves.create();
-    console.log(cylinder.count);
+    //console.log(cylinder.count)
     screenQuad = new __WEBPACK_IMPORTED_MODULE_4__geometry_ScreenQuad__["a" /* default */]();
     screenQuad.create();
     // Set up instanced rendering data arrays here.
@@ -6392,11 +6392,11 @@ function loadScene() {
     // }
     cylinder.setInstanceVBOs(l_system.branchInstances);
     cylinder.setNumInstances(l_system.branchInstances.size); // grid of "particles"
-    console.log(l_system.branchInstances);
-    console.log(l_system.branchInstances.size);
+    // console.log(l_system.branchInstances)
+    //console.log(l_system.branchInstances.size)
     square.setInstanceVBOs(l_system.leafInstances);
     square.setNumInstances(l_system.leafInstances.size); // grid of "particles"
-    console.log(l_system.leafInstances);
+    //console.log(l_system.leafInstances)
     let fallingLeavesInstance = new __WEBPACK_IMPORTED_MODULE_11__geometry_InstancedData__["a" /* default */]();
     for (let i = 0; i < 5; ++i) {
         for (let j = 0; j < 5; ++j) {
@@ -6428,7 +6428,7 @@ function main() {
     // Add controls to the gui
     const gui = new __WEBPACK_IMPORTED_MODULE_2_dat_gui__["GUI"]();
     //gui.add(controls, 'tesselations', 0, 8).step(1);
-    gui.add(controls, 'iterations', 1, 8).step(1);
+    gui.add(controls, 'iterations', 1, 5).step(1);
     gui.add(controls, 'Rotational Noise', 0, 100).step(1);
     //gui.add(controls, 'Step Noise', 0, 1).step(0.01)
     gui.add(controls, 'Radial Decay', -1, 3).step(0.01);
@@ -17368,7 +17368,7 @@ class Foliage extends __WEBPACK_IMPORTED_MODULE_1__LSystem__["a" /* default */] 
         __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].copy(this.currTurtle.position, nextPos);
         let transform = __WEBPACK_IMPORTED_MODULE_3__Utils__["a" /* default */].rightUpForwardTransformMatrix(center, this.currTurtle.right, this.currTurtle.up, this.currTurtle.orientation, __WEBPACK_IMPORTED_MODULE_0_gl_matrix__["e" /* vec3 */].fromValues(sF, sF, sStep * 1.2));
         let randTex = Math.floor(this.rand.random() * 5.0);
-        console.log(randTex);
+        //console.log(randTex)
         this.branchInstances.addInstance(transform, randTex);
         // vec3.scaleAndAdd(this.currTurtle.position, this.currTurtle.position, step, 1);
     }
@@ -17414,7 +17414,7 @@ class Foliage extends __WEBPACK_IMPORTED_MODULE_1__LSystem__["a" /* default */] 
         //this.axiom = 'FFFFyyFyyFyyFyy+++yyyFy[FF]yy++[FF]+yF';
     }
     fillCharExpansions() {
-        console.log("orchids EXPANSION");
+        // console.log("orchids EXPANSION");
         //Orchid like
         //this.charExpansions.set('F', 'F<+++Fs[<F]')
         // Tree Like
@@ -17603,7 +17603,7 @@ class LSystem {
         this.currTurtle.rotateAboutForward(angle);
     }
     fillCharExpansions() {
-        console.log("regular EXPANSION");
+        //console.log("regular EXPANSION");
         this.charExpansions.set('X', 'X.>>[X[.F].>F.F[XF]FX]');
     }
     pushTurtle() {
@@ -18121,7 +18121,7 @@ module.exports = "#version 300 es\n\nuniform mat4 u_ViewProj;\nuniform float u_T
 /* 82 */
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision highp float;\n\nin vec4 fs_Col;\nin vec4 fs_Pos;\n\nout vec4 out_Col;\nin vec4 fs_Nor;\nin vec2 fs_UV;\nin mat3 fs_TBN;\n\nuniform vec3 u_Eye;\nuniform sampler2D u_Texture;\nuniform sampler2D u_NormalMap;\n\nvoid main()\n{\n    vec4 normMap = texture(u_NormalMap, fs_UV);\n    vec3 normal = normalize(fs_TBN * normMap.xyz);\n    vec4 col = texture(u_Texture, fs_UV);\n    float alpha = col.w;\n    if(col.w < 0.3) {\n        discard;\n    } else {\n        alpha = 1.0;\n    }\n   // col = vec4(0.7, 0.7, 0.74, 1.0);\n\n    vec3 lightPos = vec3(30.0, 50.0, 100.0);\n    vec3 lightDir = normalize(lightPos - fs_Pos.xyz);\n    lightDir = normalize(vec3(1.0, 0.0, 0.0));\n    float ambient = 0.2;\n    float diffuse = ambient + clamp(dot(normalize(normal), lightDir), 0.0, 1.0);\n    \n    float cosPow = 20.0;\n    vec3 view = normalize(fs_Pos.xyz - u_Eye.xyz);\n    vec3 h = normalize(lightDir - view);\n    float specular = clamp(pow(max(dot(h, normal), 0.f), cosPow), 0.0, 10.0);\n    \n    float lightIntensity = diffuse + 0.3 * specular;\n    \n    vec3 diffuseColor = lightIntensity * col.xyz;\n    out_Col = vec4(diffuseColor.xyz,alpha);\n    \n    //out_Col = vec4(specular, specular, specular, 1.0);\n    \n}\n"
+module.exports = "#version 300 es\nprecision highp float;\n\nin vec4 fs_Col;\nin vec4 fs_Pos;\n\nout vec4 out_Col;\nin vec4 fs_Nor;\nin vec2 fs_UV;\nin mat3 fs_TBN;\n\nuniform vec3 u_Eye;\nuniform sampler2D u_Texture;\nuniform sampler2D u_NormalMap;\n\nvoid main()\n{\n    vec4 normMap = texture(u_NormalMap, fs_UV);\n    vec3 normal = normalize(fs_TBN * normMap.xyz);\n    vec4 col = texture(u_Texture, fs_UV);\n    float alpha = col.w;\n    if(col.w < 0.3) {\n        discard;\n    } else {\n        alpha = 1.0;\n    }\n   // col = vec4(0.7, 0.7, 0.74, 1.0);\n\n    vec3 lightPos = vec3(30.0, 50.0, 100.0);\n    vec3 lightDir = normalize(lightPos - fs_Pos.xyz);\n    lightDir = normalize(vec3(1.0, 0.0, 0.0));\n    float ambient = 0.2;\n    float diffuse = ambient + clamp(dot(normalize(normal), lightDir), 0.0, 1.0);\n    \n    float cosPow = 120.0;\n    vec3 view = normalize(fs_Pos.xyz - u_Eye.xyz);\n    vec3 h = normalize(lightDir - view);\n    float specular = clamp(pow(max(dot(h, normal), 0.f), cosPow), 0.0, 10.0);\n    \n    float lightIntensity = diffuse + 0.6 * specular;\n    \n    vec3 diffuseColor = lightIntensity * col.xyz;\n    out_Col = vec4(diffuseColor.xyz,alpha);\n    \n    //out_Col = vec4(specular, specular, specular, 1.0);\n    \n}\n"
 
 /***/ }),
 /* 83 */
@@ -18145,7 +18145,7 @@ module.exports = "#version 300 es\nprecision highp float;\n\n// The vertex shade
 /* 86 */
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision highp float;\n\nuniform vec3 u_Eye, u_Ref, u_Up;\nuniform vec2 u_Dimensions;\nuniform float u_Time;\n\nin vec2 fs_Pos;\nout vec4 out_Col;\n\nuniform sampler2D u_Texture;\n\nconst float PI = 3.14159265359;\nconst float TWO_PI = 6.28318530718;\n\nvec2 sphereToUV(vec3 p) {\n    float phi = atan(p.z, p.x);\n    phi += TWO_PI;\n    float theta = acos(p.y);\n    return vec2(1.f - phi / TWO_PI, 1.f - theta / PI);\n}\n\nvoid main() {\n\n    float fov = 22.5f;\n    float len = distance(u_Ref, u_Eye);\n    vec3 look = normalize(u_Ref - u_Eye);\n    vec3 right = normalize(cross(look, u_Up));\n    float aspect = u_Dimensions.x / u_Dimensions.y;\n    vec3 v = u_Up * len * tan(fov);\n    vec3 h = right * len * aspect * tan(fov);\n\n    vec3 p = u_Ref + fs_Pos.x * h + fs_Pos.y * v;\n    vec3 dir = normalize(p - u_Eye);\n    vec2 uv = 0.5 * (fs_Pos.xy + vec2(1.0, 1.0));\n    uv.y = 1.0 - uv.y;\n    out_Col = vec4(0.73, 0.70, 0.6, 1.0);\n    \n    vec4 col = texture(u_Texture, uv);\n    \n    out_Col = vec4(col.xyz, 1.0);\n   // out_Col.xy = uv;\n}\n"
+module.exports = "#version 300 es\nprecision highp float;\n\nuniform vec3 u_Eye, u_Ref, u_Up;\nuniform vec2 u_Dimensions;\nuniform float u_Time;\n\nin vec2 fs_Pos;\nout vec4 out_Col;\n\nuniform sampler2D u_Texture;\n\nconst float PI = 3.14159265359;\nconst float TWO_PI = 6.28318530718;\n\nfloat hash3(vec3 v)\n{\n    return fract(sin(dot(v, vec3(24.51853, 4815.44774, 32555.33333))) * 3942185.3);\n}\n\nvec4 noise3(vec3 v)\n{\n    //Adapted from IQ: https://www.iquilezles.org/www/articles/morenoise/morenoise.htm\n    vec3 intV = floor(v);\n    vec3 fractV = fract(v);\n    vec3 u = fractV*fractV*fractV*(fractV*(fractV*6.0-15.0)+10.0);\n    vec3 du = 30.0*fractV*fractV*(fractV*(fractV-2.0)+1.0);\n    \n    float a = hash3( intV+vec3(0.f,0.f,0.f) );\n    float b = hash3( intV+vec3(1.f,0.f,0.f) );\n    float c = hash3( intV+vec3(0.f,1.f,0.f) );\n    float d = hash3( intV+vec3(1.f,1.f,0.f) );\n    float e = hash3( intV+vec3(0.f,0.f,1.f) );\n    float f = hash3( intV+vec3(1.f,0.f,1.f) );\n    float g = hash3( intV+vec3(0.f,1.f,1.f) );\n    float h = hash3( intV+vec3(1.f,1.f,1.f) );\n    \n    float k0 =   a;\n    float k1 =   b - a;\n    float k2 =   c - a;\n    float k3 =   e - a;\n    float k4 =   a - b - c + d;\n    float k5 =   a - c - e + g;\n    float k6 =   a - b - e + f;\n    float k7 = - a + b + c - d + e - f - g + h;\n    \n    \n    vec3 dv = 2.0* du * vec3( k1 + k4*u.y + k6*u.z + k7*u.y*u.z,\n                             k2 + k5*u.z + k4*u.x + k7*u.z*u.x,\n                             k3 + k6*u.x + k5*u.y + k7*u.x*u.y);\n    \n    return vec4(-1.f+2.f*(k0 + k1*u.x + k2*u.y + k3*u.z + k4*u.x*u.y + k5*u.y*u.z + k6*u.z*u.x + k7*u.x*u.y*u.z), dv);\n}\n\nvec4 fbm3(vec3 v, int octaves, float amp, float freq, float pers, float freq_power)\n{\n    float sum = 0.f;\n    vec3 dv = vec3(0.f,0.f,0.f);\n    float speed = 0.01f;\n    for(int i = 0; i < octaves; ++i)\n    {\n        amp *= pers;\n        freq *= freq_power;\n        vec4 noise = noise3((v) * freq);\n        sum += amp * noise.x;\n        dv += amp * noise.yzw;\n    }\n    return vec4(sum, dv);\n}\n\nfloat sdPlane( vec3 p, vec3 n, float h )\n{\n  // n must be normalized\n  return dot(p,n) + h;\n}\n\nfloat map(vec3 p)\n{\n    return sdPlane(p, vec3(0.0, 1.0, 0.0), -4.0);\n}\n\nvec4 raycast(vec3 origin, vec3 dir, int maxSteps)\n{\n    float t = 0.0;\n\n    for(int i = 0; i < maxSteps; ++i)\n    {\n        vec3 p = origin + t * dir;\n        float dist = map(p);\n\n        if (abs(dist) < 0.001) {\n            return vec4(p, 0.0);\n        }\n        \n        t += dist;\n        if(t > 60.0) {\n            return vec4(0.0,0.0,0.0, -100.0);\n        }\n    }\n    \n    return vec4(0.0,0.0, 0.0, -100.0);\n}\n\nvoid main() {\n\n    float fov = 22.5f;\n    float len = distance(u_Ref, u_Eye);\n    vec3 look = normalize(u_Ref - u_Eye);\n    vec3 right = normalize(cross(look, u_Up));\n    float aspect = u_Dimensions.x / u_Dimensions.y;\n    vec3 v = u_Up * len * tan(fov);\n    vec3 h = right * len * aspect * tan(fov);\n\n    vec3 p = u_Ref + fs_Pos.x * h + fs_Pos.y * v;\n    vec3 dir = normalize(p - u_Eye);\n    vec2 uv = 0.5 * (fs_Pos.xy + vec2(1.0, 1.0));\n    uv.y = 1.0 - uv.y;\n    \n    float modTime = mod(u_Time * 0.002, 1000.0);\n    vec4 noise = fbm3(modTime + fs_Pos.xyy, 4, 0.9, 1.0, 0.5, 2.0);\n    uv.y += noise.x * 0.2;\n    \n    out_Col = vec4(0.73, 0.70, 0.6, 1.0);\n    \n    vec4 col = texture(u_Texture, uv);\n    \n    out_Col = vec4(col.xyz, 1.0);\n    \n    /*vec4 isect = raycast(u_Eye, dir, 120);\n    \n    if(isect.w > -1.0) {\n        out_Col = vec4(0.0,0.0,0.0,1.0);\n    }*/\n   // out_Col.xy = uv;\n}\n"
 
 /***/ })
 /******/ ]);
