@@ -24,7 +24,7 @@ This means that, even for trees for which I don't inject curve in the branches (
 
 Adding Curved Branches
 ======================
-I created a few different expansion rules that would curve branches in different ways. The curves occur as described above, but the expansion rules often dictate multiple turns, which result in wavy branches. One side effect of the curve method I use is that branches with more curves are often longer. Therefore, as the curvedBranchProbability increases, you're likely to see more variation in the lengths of branchs. I have included some comparisons below.
+I created a few different expansion rules that would curve branches in different ways. The curves occur as described above, but the expansion rules often dictate multiple turns, which result in wavy branches. One side effect of the curve method I use is that branches with more curves are often longer. Therefore, as the curvedBranchProbability increases, you're likely to see more variation in the lengths of branchs. I have included some comparisons below:
 
 | curvedBranchProbability = 0 | curvedBranchProbability = 0 |
 | --------------------------- | --------------------------- |
