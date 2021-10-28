@@ -25,13 +25,28 @@ class ShaderProgram {
   attrNor: number;
   attrCol: number; // This time, it's an instanced rendering attribute, so each particle can have a unique color. Not per-vertex, but per-instance.
   attrTranslate: number; // Used in the vertex shader during instanced rendering to offset the vertex positions to the particle's drawn position.
+  attrRotate: number; 
+  attrScale: number;
+
+  attrTransformX: number; 
+  attrTransformY: number; 
+  attrTransformZ: number;
+  attrTransformW: number;
+
   attrUV: number;
+  attrUVCell: number;
 
   unifModel: WebGLUniformLocation;
   unifModelInvTr: WebGLUniformLocation;
   unifViewProj: WebGLUniformLocation;
   unifCameraAxes: WebGLUniformLocation;
   unifTime: WebGLUniformLocation;
+  unifTexture: WebGLUniformLocation;
+  unifNormalMap: WebGLUniformLocation;
+
+  texture:WebGLUniformLocation;
+  normalMap:WebGLUniformLocation;
+
   unifRef: WebGLUniformLocation;
   unifEye: WebGLUniformLocation;
   unifUp: WebGLUniformLocation;
@@ -49,8 +64,19 @@ class ShaderProgram {
     }
 
     this.attrPos = gl.getAttribLocation(this.prog, "vs_Pos");
+    this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
+
     this.attrCol = gl.getAttribLocation(this.prog, "vs_Col");
     this.attrTranslate = gl.getAttribLocation(this.prog, "vs_Translate");
+    this.attrRotate = gl.getAttribLocation(this.prog, "vs_Rotate");
+    this.attrScale = gl.getAttribLocation(this.prog, "vs_Scale");
+
+    this.attrTransformX = gl.getAttribLocation(this.prog, "vs_TransformX");
+    this.attrTransformY = gl.getAttribLocation(this.prog, "vs_TransformY");
+    this.attrTransformZ = gl.getAttribLocation(this.prog, "vs_TransformZ");
+    this.attrTransformW = gl.getAttribLocation(this.prog, "vs_TransformW");
+    this.attrUVCell = gl.getAttribLocation(this.prog, "vs_UVCell");
+
     this.attrUV = gl.getAttribLocation(this.prog, "vs_UV");
     this.unifModel      = gl.getUniformLocation(this.prog, "u_Model");
     this.unifModelInvTr = gl.getUniformLocation(this.prog, "u_ModelInvTr");
@@ -60,6 +86,11 @@ class ShaderProgram {
     this.unifEye   = gl.getUniformLocation(this.prog, "u_Eye");
     this.unifRef   = gl.getUniformLocation(this.prog, "u_Ref");
     this.unifUp   = gl.getUniformLocation(this.prog, "u_Up");
+    this.unifDimensions   = gl.getUniformLocation(this.prog, "u_Dimensions");
+
+    this.unifTexture     = gl.getUniformLocation(this.prog, "u_Texture");
+    this.unifNormalMap    = gl.getUniformLocation(this.prog, "u_NormalMap");
+
   }
 
   use() {
@@ -67,6 +98,58 @@ class ShaderProgram {
       gl.useProgram(this.prog);
       activeProgram = this.prog;
     }
+  }
+
+  static isPowerOf2(value : number) {
+    return (value & (value - 1)) === 0;
+  }
+  
+  setBaseColorTexture(url:string) {
+    this.use();
+    this.texture = this.createTexture(url)
+    gl.uniform1i(this.unifTexture, 0);
+
+  }
+
+  setNormalMapTexture(url:string) {
+    this.use();
+    this.normalMap = this.createTexture(url)
+    gl.uniform1i(this.unifNormalMap, 1);
+
+  }
+  
+  createTexture(url:string) {
+    // setting up texture in OpenGL
+    let texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    // Fill the texture with a 1x1 blue pixel.
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                  new Uint8Array([0, 0, 255, 255]));
+    // Asynchronously load an image
+    var image = new Image();
+    image.src = url;
+    image.crossOrigin = "anonymous";
+  
+    console.log(image.src);
+    image.addEventListener('load', function() {
+      // Now that the image has loaded make copy it to the texture.
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+  
+      // Check if the image is a power of 2 in both dimensions.
+      if (ShaderProgram.isPowerOf2(image.width) && ShaderProgram.isPowerOf2(image.height)) {
+         // Yes, it's a power of 2. Generate mips.
+         gl.generateMipmap(gl.TEXTURE_2D);
+      } else {
+         // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
+         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      }
+    });
+  
+    return texture;
+  
   }
 
   setEyeRefUp(eye: vec3, ref: vec3, up: vec3) {
@@ -151,11 +234,68 @@ class ShaderProgram {
       gl.vertexAttribDivisor(this.attrTranslate, 1); // Advance 1 index in translate VBO for each drawn instance
     }
 
+    if (this.attrRotate != -1 && d.bindRotate()) {
+      gl.enableVertexAttribArray(this.attrRotate);
+      gl.vertexAttribPointer(this.attrRotate, 3, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrRotate, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
+    if (this.attrScale != -1 && d.bindScale()) {
+      gl.enableVertexAttribArray(this.attrScale);
+      gl.vertexAttribPointer(this.attrScale, 3, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrScale, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
+    if (this.attrTransformX != -1 && d.bindTransformX()) {
+      gl.enableVertexAttribArray(this.attrTransformX);
+      gl.vertexAttribPointer(this.attrTransformX, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrTransformX, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
+    if (this.attrTransformY != -1 && d.bindTransformY()) {
+      gl.enableVertexAttribArray(this.attrTransformY);
+      gl.vertexAttribPointer(this.attrTransformY, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrTransformY, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
+    if (this.attrTransformZ != -1 && d.bindTransformZ()) {
+      gl.enableVertexAttribArray(this.attrTransformZ);
+      gl.vertexAttribPointer(this.attrTransformZ, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrTransformZ, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
+    if (this.attrTransformW != -1 && d.bindTransformW()) {
+      gl.enableVertexAttribArray(this.attrTransformW);
+      gl.vertexAttribPointer(this.attrTransformW, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrTransformW, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
+    if (this.attrUVCell != -1 && d.bindUVCell()) {
+      gl.enableVertexAttribArray(this.attrUVCell);
+      gl.vertexAttribPointer(this.attrUVCell, 1, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrUVCell, 1); // Advance 1 index in translate VBO for each drawn instance
+    }
+
     if (this.attrUV != -1 && d.bindUV()) {
       gl.enableVertexAttribArray(this.attrUV);
       gl.vertexAttribPointer(this.attrUV, 2, gl.FLOAT, false, 0, 0);
       gl.vertexAttribDivisor(this.attrUV, 0); // Advance 1 index in pos VBO for each vertex
     }
+
+    if (this.unifTexture != -1) {
+      gl.activeTexture(gl.TEXTURE0); //GL supports up to 32 different active textures at once(0 - 31)
+      gl.bindTexture(gl.TEXTURE_2D, this.texture);
+      gl.uniform1i(this.unifTexture, 0);
+    }
+
+    if (this.unifNormalMap != -1) {
+      gl.activeTexture(gl.TEXTURE1); //GL supports up to 32 different active textures at once(0 - 31)
+      gl.bindTexture(gl.TEXTURE_2D, this.normalMap);
+      gl.uniform1i(this.unifNormalMap, 1);
+    }
+
+   //  console.log("unif normal map "+ this.unifNormalMap)
+   // console.log("unifTexture "+ this.unifTexture)
 
     // TODO: Set up attribute data for additional instanced rendering data as needed
 

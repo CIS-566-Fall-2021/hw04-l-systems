@@ -10,20 +10,54 @@ in vec4 vs_Pos; // Non-instanced; each particle is the same quad drawn in a diff
 in vec4 vs_Nor; // Non-instanced, and presently unused
 in vec4 vs_Col; // An instanced rendering attribute; each particle instance has a different color
 in vec3 vs_Translate; // Another instance rendering attribute used to position each quad instance in the scene
+
+in vec3 vs_Rotate; // Another instance rendering attribute used to position each quad instance in the scene
+
+in vec3 vs_Scale; // Another instance rendering attribute used to position each quad instance in the scene
+
 in vec2 vs_UV; // Non-instanced, and presently unused in main(). Feel free to use it for your meshes.
+
+out vec2 fs_UV;
+
+in vec4 vs_TransformX;
+in vec4 vs_TransformY;
+in vec4 vs_TransformZ;
+in vec4 vs_TransformW;
+in float vs_UVCell;
 
 out vec4 fs_Col;
 out vec4 fs_Pos;
+out vec4 fs_Nor;
+out mat3 fs_TBN;
+
+vec2 transformUV()
+{
+    float tex_divs = 5.0;
+    float uv_scale = 1.0 / tex_divs;
+    float cel_y = uv_scale * floor(vs_UVCell * uv_scale);
+    float cel_x = uv_scale * (mod(vs_UVCell, tex_divs));
+    float nextcel_y = uv_scale * floor(vs_UVCell * uv_scale + 1.0);
+    vec2 transformedUV = vs_UV;
+    transformedUV *= uv_scale;
+    transformedUV += vec2(cel_x, cel_y);
+    
+    return transformedUV;
+}
 
 void main()
 {
-    fs_Col = vs_Col;
-    fs_Pos = vs_Pos;
+    fs_UV = transformUV();
+    fs_Col = vs_Pos;
+    mat4 transform = mat4(vs_TransformX, vs_TransformY, vs_TransformZ, vs_TransformW);
+    vec4 modelPos = transform * vec4(vs_Pos.xyz, 1.0);
+    
+    fs_Pos = modelPos;
 
-    vec3 offset = vs_Translate;
-    offset.z = (sin((u_Time + offset.x) * 3.14159 * 0.1) + cos((u_Time + offset.y) * 3.14159 * 0.1)) * 1.5;
-
-    vec3 billboardPos = offset + vs_Pos.x * u_CameraAxes[0] + vs_Pos.y * u_CameraAxes[1];
-
-    gl_Position = u_ViewProj * vec4(billboardPos, 1.0);
+    vec4 normal = normalize(transform * vs_Nor);
+    fs_Nor = normal;
+    vec3 tangent = normalize(cross(vec3(0,1,0),normal.xyz));
+    vec3 bitangent = normalize(cross(normal.xyz, tangent));
+    fs_TBN = mat3(tangent, bitangent, normal);
+    
+    gl_Position = u_ViewProj * modelPos;
 }
