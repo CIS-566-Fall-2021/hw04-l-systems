@@ -15,58 +15,36 @@ in vec3 vs_Scale;
 in vec2 vs_UV; // Non-instanced, and presently unused in main(). Feel free to use it for your meshes.
 
 out vec4 fs_Col;
-out vec4 fs_Pos;
+out vec4 fs_Pos;    
+out vec3 fs_Norm;
 
 //https://community.khronos.org/t/quaternion-functions-for-glsl/50140
-vec3 transformQuat(vec3 a, vec4 q) {
-    return a + 2.0*cross(cross(a, q.xyz ) + q.w*a, q.xyz);
 
-    float qx = q[0];
-    float qy = q[1];
-    float qz = q[2];
-    float qw = q[3];
-    float x = a[0];
-    float y = a[1];
-    float z = a[2];
-
-    float uvx = qy * z - qz * y;
-    float uvy = qz * x - qx * z;
-    float uvz = qx * y - qy * x;
-  // var uuv = vec3.cross([], qvec, uv);
-    float uuvx = qy * uvz - qz * uvy;
-    float uuvy = qz * uvx - qx * uvz;
-    float uuvz = qx * uvy - qy * uvx;
-  // vec3.scale(uv, uv, 2 * w);
-  float w2 = qw * 2.;
-  uvx *= w2;
-  uvy *= w2;
-  uvz *= w2;
-  // vec3.scale(uuv, uuv, 2);
-  uuvx *= 2.;
-  uuvy *= 2.;
-  uuvz *= 2.;
-  // return vec3.add(out, a, vec3.add(out, uv, uuv));
-  
-  return vec3(x + uvx + uuvx, y + uvy + uuvy, z + uvz + uuvz);
+vec3 sway(vec3 pos) {
+    return vec3(pos.x + (clamp(pos.y - 8., 0., 100.) / 40. * sin(u_Time / 50. + 128.27)), 
+                pos.y + (clamp(pos.y - 12., 0., 100.) / 64. * sin(u_Time / 50.)), 
+                pos.z + (clamp(pos.y - 8., 0., 100.) / 32. * sin(u_Time / 50. + 21.097)) + 100.);
 }
 
-//https://www.geeks3d.com/20141201/how-to-rotate-a-vertex-by-a-quaternion-in-glsl/
-vec3 rotate_vertex_position(vec3 position)
-{ 
-  vec3 v = position.xyz;
-  return v + 2.0 * cross(vs_Rotate.xyz, cross(vs_Rotate.xyz, v) + vs_Rotate.w * v);
+vec3 transformQuat(vec3 a, vec4 q) {
+    normalize(q);
+    return a + 2.0*cross(cross(a, q.xyz ) + q.w*a, q.xyz);
 }
 
 void main()
 {
     fs_Col = vs_Col;
     fs_Pos = vs_Pos;
+    fs_Norm = transformQuat(vs_Nor.xyz, vs_Rotate);
 
     vec3 offset = vs_Translate;
     //vec3 xRot = rotatex(vs_Pos, vs_Rotate.x);
     //offset.z = (sin((u_Time + offset.x) * 3.14159 * 0.1) + cos((u_Time + offset.y) * 3.14159 * 0.1)) * 1.5;
 
-    vec3 billboardPos = offset + vs_Pos.x * u_CameraAxes[0] + vs_Pos.y * u_CameraAxes[1];
+    vec3 billboardPos = vec3(vs_Pos.x * vs_Scale.x, vs_Pos.y * vs_Scale.y, vs_Pos.z * vs_Scale.z);
+    billboardPos = transformQuat(billboardPos, vs_Rotate);
+    billboardPos = billboardPos + vs_Translate;
+    billboardPos = sway(billboardPos) * .1;
 
-    gl_Position = u_ViewProj * vec4(billboardPos, 1.0);
+    gl_Position = u_ViewProj * vec4(billboardPos, 1.);
 }

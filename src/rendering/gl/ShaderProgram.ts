@@ -159,13 +159,13 @@ class ShaderProgram {
     if (this.attrRotate != -1 && d.bindRotate()) {
       gl.enableVertexAttribArray(this.attrRotate);
       gl.vertexAttribPointer(this.attrRotate, 4, gl.FLOAT, false, 0, 0);
-      gl.vertexAttribDivisor(this.attrRotate, 1); // Advance 1 index in translate VBO for each drawn instance
+      gl.vertexAttribDivisor(this.attrRotate, 1); // Advance 1 index in rotate VBO for each drawn instance
     }
 
     if (this.attrScale != -1 && d.bindScale()) {
       gl.enableVertexAttribArray(this.attrScale);
       gl.vertexAttribPointer(this.attrScale, 3, gl.FLOAT, false, 0, 0);
-      gl.vertexAttribDivisor(this.attrScale, 1); // Advance 1 index in translate VBO for each drawn instance
+      gl.vertexAttribDivisor(this.attrScale, 1); // Advance 1 index in scale VBO for each drawn instance
     }
 
     if (this.attrUV != -1 && d.bindUV()) {

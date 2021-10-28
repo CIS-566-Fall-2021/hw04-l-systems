@@ -12,7 +12,7 @@ class Mesh extends Drawable {
   center: vec4;
   offsets: Float32Array;
   rotations: Float32Array;
-
+  scales: Float32Array;
   objString: string;
 
   constructor(objString: string, center: vec3) {
@@ -60,6 +60,9 @@ class Mesh extends Drawable {
     this.generateNor();
     this.generateUV();
     this.generateCol();
+    this.generateTranslate();
+    this.generateRotation();
+    this.generateScale();
 
     this.count = this.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
@@ -81,10 +84,11 @@ class Mesh extends Drawable {
     this.objString = ""; // hacky clear
   }
 
-  setInstanceVBOs(offsets: Float32Array, colors: Float32Array, rotations: Float32Array) {
+  setInstanceVBOs(offsets: Float32Array, colors: Float32Array, rotations: Float32Array, scales: Float32Array) {
     this.colors = colors;
     this.offsets = offsets;
     this.rotations = rotations;
+    this.scales = scales;
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
     gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
@@ -92,6 +96,8 @@ class Mesh extends Drawable {
     gl.bufferData(gl.ARRAY_BUFFER, this.offsets, gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufRotation);
     gl.bufferData(gl.ARRAY_BUFFER, this.rotations, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufScale);
+    gl.bufferData(gl.ARRAY_BUFFER, this.scales, gl.STATIC_DRAW);
   }
 };
 
