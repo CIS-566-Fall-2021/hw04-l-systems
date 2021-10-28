@@ -4,7 +4,7 @@ PennKey : smlee18
 
 Live Demo: https://18smlee.github.io/hw04-l-systems/
 
-![image](tree_overview.gif)
+![image](tree_overview.PNG)
 
 ## Tree Lsystem Design
 I started with a base rule of F = F[-F]F[+F], and slowly added in elements of variance to get a more visually interesting tree. To get the branches rotating in all directions I added a few additional recursive calls rotating around the right and up vectors. I also added a rotateRandom function into the drawing rules that generates a random angle based on a seed input and rotates a branch that amount about a given axis. This gave the trunk and branches a more organic, "wobbly" effect rather than staying stick straight. 
