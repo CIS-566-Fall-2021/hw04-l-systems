@@ -4,7 +4,7 @@ import * as DAT from 'dat-gui';
 import Square from './geometry/Square';
 import ScreenQuad from './geometry/ScreenQuad';
 import OpenGLRenderer from './rendering/gl/OpenGLRenderer';
-import LSystemProcessor from './lsystem/lsystemprocessor'
+import LSystemProcessor from './lsystem/LSystemProcessor'
 import Camera from './Camera';
 import {gl, setGL} from './globals';
 import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';

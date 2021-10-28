@@ -1,5 +1,5 @@
 import { mat4, vec3 } from 'gl-matrix';
-import Turtle from './turtle'
+import Turtle from './Turtle'
 
 var PI = 3.14159;
 class LSystemProcessor {
