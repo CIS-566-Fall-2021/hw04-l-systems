@@ -12,7 +12,6 @@ import ShaderProgram, {Shader} from './rendering/gl/ShaderProgram';
 import Mesh from './geometry/Mesh';
 import cylinderObjStr from './geometry/cylinderObj';
 import flowerObj from './flowerObj';
-import altLeafObj from './geometry/AltLeafObj';
 
 // Define an object with application parameters and button callbacks
 // This will be referred to by dat.GUI's functions that add GUI elements.
@@ -66,14 +65,14 @@ function main() {
   lsystem = new LSystem(controls.iterations);
   lsystem.setGrammar(controls.angle, controls.curvedBranchProbability);
   lsystem.expandGrammar();
-  cylinder = new Mesh(altLeafObj, vec3.fromValues(0, 0, 0));
+  cylinder = new Mesh(cylinderObjStr, vec3.fromValues(0, 0, 0));
   flower = new Mesh(flowerObj, vec3.fromValues(0, 0, 0));
   lsystem.draw(cylinder, flower);
 
   screenQuad = new ScreenQuad();
   screenQuad.create();
 
-  ground = new Mesh(altLeafObj, vec3.fromValues(0, 0, 0));
+  ground = new Mesh(cylinderObjStr, vec3.fromValues(0, 0, 0));
   ground.create();
   ground.setNumInstances(1);
 
