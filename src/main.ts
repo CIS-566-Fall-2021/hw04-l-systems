@@ -62,8 +62,8 @@ function buildScene() {
   let type: boolean[] = tup[3]; 
 
   //Creating meshes
-  let obj: string = readTextFile('./src/cyl.obj'); 
-  let obj2: string = readTextFile('./src/leaf.obj'); 
+  let obj: string = readTextFile('cyl.obj'); 
+  let obj2: string = readTextFile('leaf.obj'); 
   //console.log(obj);
   square = new Mesh(obj, vec3.fromValues(0, 0, 0));
   square.create();
