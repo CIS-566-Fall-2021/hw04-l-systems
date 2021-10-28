@@ -28,7 +28,7 @@ out vec4 fs_LightVec;
 void main()
 {
 
-    vec4 lightPos = vec4(0.0, 30.0, 10.0, 1.0);
+    vec4 lightPos = vec4(0.0, 30.0, 30.0, 1.0);
 
     fs_Col = vs_Col;
     fs_Pos = vs_Pos;
