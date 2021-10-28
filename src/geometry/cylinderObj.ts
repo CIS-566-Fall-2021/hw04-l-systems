@@ -1,23 +1,5 @@
-<!doctype html>
-<html>
-  <head>
-      <title>Homework 4: L-System | CIS 566</title>
-      <style>
-        html, body {
-          margin: 0;
-          overflow: hidden;
-        }
-        #canvas {
-          width: 100%;
-          height: 100%;
-        }
-      </style>
-  </head>
-  <body>
-    <canvas id="canvas"></canvas>
-    <script type="text/javascript" src="dist/bundle.js"></script>
-    <script type="text/plain" id="cylinder.obj">
-      # Blender v2.93.5 OBJ File: ''
+let cylinderObjStr = `
+# Blender v2.93.5 OBJ File: ''
 # www.blender.org
 mtllib cylinder.mtl
 o Cylinder
@@ -286,6 +268,6 @@ f 61/62/32 62/61/32 64/95/32 63/96/32
 f 63/96/33 64/95/33 2/97/33 1/98/33
 f 1/99/34 3/100/34 5/101/34 7/102/34 9/103/34 11/104/34 13/105/34 15/106/34 17/107/34 19/108/34 21/109/34 23/110/34 25/111/34 27/112/34 29/113/34 31/114/34 33/115/34 35/116/34 37/117/34 39/118/34 41/119/34 43/120/34 45/121/34 47/122/34 49/123/34 51/124/34 53/125/34 55/126/34 57/127/34 59/128/34 61/129/34 63/130/34
 
-  </script> 
-  </body>
-</html>
+            `;
+
+export default cylinderObjStr;
