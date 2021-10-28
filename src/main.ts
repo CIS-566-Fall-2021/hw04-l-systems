@@ -39,6 +39,9 @@ let leaf: Mesh;
 let potOBJ: string = readTextFile('./src/geometry/pot.obj');
 let pot: Mesh;
 
+let dirtOBJ: string = readTextFile('./src/geometry/dirt.obj');
+let dirt: Mesh;
+
 let groundOBJ: string = readTextFile('./src/geometry/ground.obj');
 let ground: Mesh;
 
@@ -57,6 +60,9 @@ function loadScene(seed:number, branchThickness: number) {
 
   pot = new Mesh(potOBJ, vec3.fromValues(0.0, 0.0, 0.0));
   pot.create();
+
+  dirt = new Mesh(dirtOBJ, vec3.fromValues(0.0, 2.0, 0.0));
+  dirt.create();
 
   ground = new Mesh(groundOBJ, vec3.fromValues(0.0, 0.0, 0.0));
   ground.create();
@@ -202,6 +208,52 @@ function loadScene(seed:number, branchThickness: number) {
   pot.setInstanceVBOs(potColors, potTransform1, potTransform2, potTransform3, potTransform4);
   pot.setNumInstances(potNum);
 
+  // Set up instanced rendering data arrays for dirt
+  let dirtNum: number = 1;
+
+  let dirtColorsArray = [];
+  let dirtTransform1Array = [];
+  let dirtTransform2Array = [];
+  let dirtTransform3Array = [];
+  let dirtTransform4Array = [];
+  for (let i = 0; i < potNum; i++) {
+    let T = mat4.create();
+    mat4.identity(T);
+    dirtTransform1Array.push(T[0]);
+    dirtTransform1Array.push(T[1]);
+    dirtTransform1Array.push(T[2]);
+    dirtTransform1Array.push(T[3]);
+
+    dirtTransform2Array.push(T[4]);
+    dirtTransform2Array.push(T[5]);
+    dirtTransform2Array.push(T[6]);
+    dirtTransform2Array.push(T[7]);
+
+    dirtTransform3Array.push(T[8]);
+    dirtTransform3Array.push(T[9]);
+    dirtTransform3Array.push(T[10]);
+    dirtTransform3Array.push(T[11]);
+
+    dirtTransform4Array.push(T[12]);
+    dirtTransform4Array.push(T[13]);
+    dirtTransform4Array.push(T[14]);
+    dirtTransform4Array.push(1);
+
+    dirtColorsArray.push(33.0/255.0);
+    dirtColorsArray.push(13.0/255.0);
+    dirtColorsArray.push(2.0/255.0);
+    dirtColorsArray.push(1.0);
+  }
+
+  let dirtColors: Float32Array = new Float32Array(dirtColorsArray);
+  let dirtTransform1: Float32Array = new Float32Array(dirtTransform1Array);
+  let dirtTransform2: Float32Array = new Float32Array(dirtTransform2Array);
+  let dirtTransform3: Float32Array = new Float32Array(dirtTransform3Array);
+  let dirtTransform4: Float32Array = new Float32Array(dirtTransform4Array);
+
+  dirt.setInstanceVBOs(dirtColors, dirtTransform1, dirtTransform2, dirtTransform3, dirtTransform4);
+  dirt.setNumInstances(dirtNum);
+
   // Set up instanced rendering data arrays for pot
   let groundNum: number = 1;
 
@@ -324,6 +376,7 @@ function main() {
       leaf,
       pot,
       ground,
+      dirt,
     ]);
     stats.end();
 
