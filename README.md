@@ -2,6 +2,11 @@
 
 For this assignment, I wanted to experiment with stylized rendering along with the base L-System requirements.
 
+ __Name__: Jake Lem
+
+__PennKey__: jakelem
+
+__Demo Link__: https://jakelem.github.io/hw04-l-systems/
 
 <p align="center">
 <img src="images/tree4.png" alt="drawing" width="500"/>
@@ -38,3 +43,6 @@ For this assignment, I wanted to experiment with stylized rendering along with t
 <img src="images/tree3.png" alt="drawing" width="500"/>
 </p>
 <p align= "center">
+
+## Sources
+- Texturing in WebGL: https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Using_textures_in_WebGL
