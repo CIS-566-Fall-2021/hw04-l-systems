@@ -16,14 +16,16 @@ import Plant from './lsystem/Plant';
 // This will be referred to by dat.GUI's functions that add GUI elements.
 
 // Procedural Controls
-let prevIterations: number = 3.0;
-let prevBranchThickness: number = 0.5;
-let prevSeed: number = 1.0;
+let prevIterations: number;
+let prevBranchThickness: number;
+let prevSeed: number;
+let prevAppleDensity: number;
 
 const controls = {
   iterations: 3,
   branchThickness: 0.5,
   seed: 1.0,
+  appleDensity: 0.15,
 };
 
 let square: Square;
@@ -49,7 +51,7 @@ let appleOBJ: string = readTextFile('./src/geometry/apple.obj');
 let apple: Mesh;
 
 
-function loadScene(seed:number, branchThickness: number) {
+function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   square = new Square();
   square.create();
   screenQuad = new ScreenQuad();
@@ -74,7 +76,7 @@ function loadScene(seed:number, branchThickness: number) {
   apple.create();
 
   // Create plant
-  let plant = new Plant("TTTTTTTTX", controls.iterations, 30.0, seed, branchThickness);
+  let plant = new Plant("TTTTTTTTX", controls.iterations, 30.0, seed, branchThickness, appleDensity);
   plant.create();
 
   // Set up instanced rendering data arrays for plant
@@ -367,6 +369,7 @@ function main() {
   gui.add(controls, 'iterations', 1, 6).step(1.0);
   gui.add(controls, 'branchThickness', 0.3, 0.8).step(0.02);
   gui.add(controls, 'seed', 1.0, 10.0).step(1.0);
+  gui.add(controls, 'appleDensity', 0.0, 0.25).step(0.01);
 
 
   // get canvas and webgl context
@@ -380,7 +383,7 @@ function main() {
   setGL(gl);
 
   // Initial call to load scene
-  loadScene(controls.seed, controls.branchThickness);
+  loadScene(controls.seed, controls.branchThickness, controls.appleDensity);
 
   const camera = new Camera(vec3.fromValues(0, 10, 30), vec3.fromValues(0, 5, 0));
 
@@ -406,19 +409,13 @@ function main() {
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
     renderer.clear();
 
-    if (controls.iterations != prevIterations) {
-      loadScene(controls.seed, controls.branchThickness);
+    if (controls.iterations != prevIterations || controls.branchThickness != prevBranchThickness || 
+        controls.seed != prevSeed || controls.appleDensity != prevAppleDensity) {
+      loadScene(controls.seed, controls.branchThickness, controls.appleDensity);
       prevIterations = controls.iterations;
-    }
-
-    if (controls.branchThickness != prevBranchThickness) {
-      loadScene(controls.seed, controls.branchThickness);
       prevBranchThickness = controls.branchThickness;
-    }
-
-    if (controls.seed != prevSeed) {
-      loadScene(controls.seed, controls.branchThickness);
       prevSeed = controls.seed;
+      prevAppleDensity = controls.appleDensity;
     }
 
     renderer.render(camera, flat, [screenQuad]);

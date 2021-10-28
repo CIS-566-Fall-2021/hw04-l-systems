@@ -16,8 +16,9 @@ export default class Plant {
     // Procedural controls
     seed: number
     branchThickness: number
+    appleDensity: number
 
-    constructor(axiom: string, depth: number, angle: number, seed: number, branchThickness: number) {
+    constructor(axiom: string, depth: number, angle: number, seed: number, branchThickness: number, appleDensity: number) {
         this.lsystem = new LSystem(axiom, branchThickness);
         this.depth = depth;
         this.angle = angle;
@@ -25,6 +26,7 @@ export default class Plant {
         this.seed = seed;
         ran.core.seed(seed);
         this.branchThickness = branchThickness;
+        this.appleDensity = appleDensity;
     }
 
     drawForward() {
@@ -65,9 +67,8 @@ export default class Plant {
         turtle.isApple = true;
 
         // Variable that controls density of apples
-        let appleDensity = 0.15;
         
-        if (ran.core.float() as number < appleDensity) {
+        if (ran.core.float() as number < this.appleDensity) {
             let transformMat = turtle.getTransformationMatrix();
             let I = mat4.create();
             mat4.identity(I);
