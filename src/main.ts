@@ -45,6 +45,9 @@ let dirt: Mesh;
 let groundOBJ: string = readTextFile('./src/geometry/ground.obj');
 let ground: Mesh;
 
+let appleOBJ: string = readTextFile('./src/geometry/apple.obj');
+let apple: Mesh;
+
 
 function loadScene(seed:number, branchThickness: number) {
   square = new Square();
@@ -61,11 +64,14 @@ function loadScene(seed:number, branchThickness: number) {
   pot = new Mesh(potOBJ, vec3.fromValues(0.0, 0.0, 0.0));
   pot.create();
 
-  dirt = new Mesh(dirtOBJ, vec3.fromValues(0.0, 2.0, 0.0));
+  dirt = new Mesh(dirtOBJ, vec3.fromValues(0.0, 0.0, 0.0));
   dirt.create();
 
   ground = new Mesh(groundOBJ, vec3.fromValues(0.0, 0.0, 0.0));
   ground.create();
+  
+  apple = new Mesh(appleOBJ, vec3.fromValues(0.0, 0.0, 0.0));
+  apple.create();
 
   // Create plant
   let plant = new Plant("TTTTTTTTX", controls.iterations, 30.0, seed, branchThickness);
@@ -162,6 +168,51 @@ function loadScene(seed:number, branchThickness: number) {
   leaf.setInstanceVBOs(leafColors, leafTransform1, leafTransform2, leafTransform3, leafTransform4);
   leaf.setNumInstances(plant.leafTransformationMats.length);
 
+  // Set up instanced rendering data arrays for apple
+  let appleNum: number = plant.appleTransformationMats.length;
+
+  let appleColorsArray = [];
+  let appleTransform1Array = [];
+  let appleTransform2Array = [];
+  let appleTransform3Array = [];
+  let appleTransform4Array = [];
+  for (let i = 0; i < appleNum; i++) {
+    let T = plant.appleTransformationMats[i];
+    appleTransform1Array.push(T[0]);
+    appleTransform1Array.push(T[1]);
+    appleTransform1Array.push(T[2]);
+    appleTransform1Array.push(T[3]);
+
+    appleTransform2Array.push(T[4]);
+    appleTransform2Array.push(T[5]);
+    appleTransform2Array.push(T[6]);
+    appleTransform2Array.push(T[7]);
+
+    appleTransform3Array.push(T[8]);
+    appleTransform3Array.push(T[9]);
+    appleTransform3Array.push(T[10]);
+    appleTransform3Array.push(T[11]);
+
+    appleTransform4Array.push(T[12]);
+    appleTransform4Array.push(T[13]);
+    appleTransform4Array.push(T[14]);
+    appleTransform4Array.push(1);
+
+    appleColorsArray.push(185.0/255.0);
+    appleColorsArray.push(25.0/255.0);
+    appleColorsArray.push(7.0/255.0);
+    appleColorsArray.push(1.0);
+  }
+
+  let appleColors: Float32Array = new Float32Array(appleColorsArray);
+  let appleTransform1: Float32Array = new Float32Array(appleTransform1Array);
+  let appleTransform2: Float32Array = new Float32Array(appleTransform2Array);
+  let appleTransform3: Float32Array = new Float32Array(appleTransform3Array);
+  let appleTransform4: Float32Array = new Float32Array(appleTransform4Array);
+
+  apple.setInstanceVBOs(appleColors, appleTransform1, appleTransform2, appleTransform3, appleTransform4);
+  apple.setNumInstances(appleNum);
+
   // Set up instanced rendering data arrays for pot
   let potNum: number = 1;
 
@@ -254,7 +305,7 @@ function loadScene(seed:number, branchThickness: number) {
   dirt.setInstanceVBOs(dirtColors, dirtTransform1, dirtTransform2, dirtTransform3, dirtTransform4);
   dirt.setNumInstances(dirtNum);
 
-  // Set up instanced rendering data arrays for pot
+  // Set up instanced rendering data arrays for ground
   let groundNum: number = 1;
 
   let groundColorsArray = [];
@@ -377,6 +428,7 @@ function main() {
       pot,
       ground,
       dirt,
+      apple,
     ]);
     stats.end();
 

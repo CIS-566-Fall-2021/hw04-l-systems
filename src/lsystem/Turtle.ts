@@ -10,6 +10,7 @@ export default class Turtle {
     depth: number;
     trunkDepth: number;
     isLeaf: boolean = false;
+    isApple: boolean = false;
     branchThickness: number = 0.5;
 
     constructor(pos: vec4, forward: vec4, right: vec4, up: vec4, depth: number, trunkDepth: number, branchThickness: number) {
@@ -53,9 +54,9 @@ export default class Turtle {
 
         
         let scale = mat4.create();
-        // if the turtle represents a leaf, do not scale
-        if (this.isLeaf) {
-
+        // if the turtle represents a leaf or apple, do not scale
+        if (this.isLeaf || this.isApple) {
+            
             scale = mat4.identity(scale);
 
         } else {

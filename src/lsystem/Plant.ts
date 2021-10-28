@@ -10,6 +10,7 @@ export default class Plant {
     positions: vec4[] = new Array();
     transformationMats: mat4[] = new Array();
     leafTransformationMats: mat4[] = new Array();
+    appleTransformationMats: mat4[] = new Array();
     angle: number
 
     // Procedural controls
@@ -29,6 +30,7 @@ export default class Plant {
     drawForward() {
         let turtle = this.lsystem.currTurtle;
         turtle.isLeaf = false;
+        turtle.isApple = false;
 
         let turtlePos = vec4.fromValues(turtle.pos[0], turtle.pos[1], turtle.pos[2], turtle.pos[3]);
         let transformMat = turtle.getTransformationMatrix();
@@ -41,17 +43,39 @@ export default class Plant {
         let turtle = this.lsystem.currTurtle;
 
         turtle.isLeaf = true;
+        turtle.isApple = false;
 
         let transformMat = turtle.getTransformationMatrix();
         let I = mat4.create();
         mat4.identity(I);
         let randomRotation = mat4.create();
-        mat4.rotateX(randomRotation, I, Math.random() * 30);
-        mat4.rotateY(randomRotation, randomRotation, Math.random() * 30);
-        mat4.rotateZ(randomRotation, randomRotation, Math.random() * 30);
+        let random = ran.core.float() as number;
+        mat4.rotateX(randomRotation, I, random * 30);
+        mat4.rotateY(randomRotation, randomRotation, random * 30);
+        mat4.rotateZ(randomRotation, randomRotation, random * 30);
         
         mat4.multiply(transformMat, transformMat, randomRotation);
         this.leafTransformationMats.push(transformMat);
+    }
+
+    drawApple() {
+        let turtle = this.lsystem.currTurtle;
+
+        turtle.isLeaf = false;
+        turtle.isApple = true;
+
+        // Variable that controls density of apples
+        let appleDensity = 0.15;
+        
+        if (ran.core.float() as number < appleDensity) {
+            let transformMat = turtle.getTransformationMatrix();
+            let I = mat4.create();
+            mat4.identity(I);
+            let randomRotation = mat4.create();
+            mat4.rotateX(randomRotation, I, 4.0 * Math.PI / 3.0);
+            mat4.multiply(transformMat, transformMat, randomRotation);
+            this.appleTransformationMats.push(transformMat);
+        }
     }
 
     drawNothing() {}
@@ -121,6 +145,7 @@ export default class Plant {
         this.lsystem.addDrawingRule("F", this.drawForward.bind(this), 1.0);
         this.lsystem.addDrawingRule("X", this.drawNothing.bind(this), 1.0);
         this.lsystem.addDrawingRule("L", this.drawLeaf.bind(this), 1.0);
+        this.lsystem.addDrawingRule("A", this.drawApple.bind(this), 1.0);
 
         this.lsystem.addDrawingRule("+", this.rotateUpPos.bind(this), 0.5);
         this.lsystem.addDrawingRule("-", this.rotateUpNeg.bind(this), 1.0);
@@ -147,13 +172,20 @@ export default class Plant {
         this.lsystem.addExpansionRule("F", new ExpansionRule(F_map, this.seed));
 
         let X_map = new Map([
-            ["FFFF[+FFLXL]FF[#FFXL]FLFL[$FFLXL]FF[-FFLXL]FFXL", 1.0],
+            ["FFFF[+FFLXL]FF[#FFXLA]FLFL[$FFLXL]FF[-FFLXL]FFXLA", 1.0],
         ]);
         this.lsystem.addExpansionRule("X", new ExpansionRule(X_map, this.seed));
+
         let L_map = new Map([
             ["L", 1.0],
         ]);
         this.lsystem.addExpansionRule("L", new ExpansionRule(L_map, this.seed));
+
+        let A_map = new Map([
+            ["A", 1.0],
+            // ["", 1.0],
+        ]);
+        this.lsystem.addExpansionRule("A", new ExpansionRule(A_map, this.seed));
 
         let rotateUpPos_map = new Map([["+", 1.0]]);
         this.lsystem.addExpansionRule("+", new ExpansionRule(rotateUpPos_map, this.seed));
