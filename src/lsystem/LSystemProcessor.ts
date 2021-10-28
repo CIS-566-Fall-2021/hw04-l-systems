@@ -10,9 +10,21 @@ class LSystemProcessor {
     operations: Map<String, Function>;
     moveScale:number = 3;
     rotateRads:number = 0.34;
-    randomMod:number = 1;
     drawFunc: Function;
-    constructor(drawFunc: Function, axiom: string) {
+    chanceDisable: number;
+    moveJitter: number;
+    rotateVariance: number;
+    constructor(
+        drawFunc: Function,
+        axiom: string,
+        angle: number,
+        chanceDisable: number,
+        moveJitter: number,
+        rotateVariance: number) {
+        this.rotateRads = angle;
+        this.chanceDisable = chanceDisable;
+        this.moveJitter = moveJitter;
+        this.rotateVariance = rotateVariance;
         this.state = axiom;
         this.turtleCurrent = new Turtle();
         this.turtles = new Array<Turtle>();
@@ -32,16 +44,28 @@ class LSystemProcessor {
         this.operations.set('&', this.rotateYPositive);
         this.operations.set('[', this.pushTurtleState);
         this.operations.set(']', this.popTurtleState);
+        this.operations.set('D', this.chanceTurtleDisable);
+        this.operations.set('J', function() {
+            let val = Math.random();
+            this.move(val * this.moveJitter);
+        })
 
         let r = Turtle.DEFAULT_RADIUS;
-        this.operations.set('a', function() { this.moveAndDraw(r * 2, "branch"); }.bind(this));
-        this.operations.set('b', function() { this.moveAndDraw(r * 4, "branch"); }.bind(this));
-        this.operations.set('c', function() { this.moveAndDraw(r * 7, "branch"); }.bind(this));
-        this.operations.set('d', function() { this.moveAndDraw(r * 13, "branch"); }.bind(this));
-        this.operations.set('e', function() { this.moveAndDraw(r * 25, "branch"); }.bind(this));
+        this.operations.set('a', function(m:number) { this.moveAndDraw(m, r * 3, "branch"); }.bind(this));
+        this.operations.set('b', function(m:number) { this.moveAndDraw(m, r * 6, "branch"); }.bind(this));
+        this.operations.set('c', function(m:number) { this.moveAndDraw(m, r * 14, "branch"); }.bind(this));
+        this.operations.set('d', function(m:number) { this.moveAndDraw(m, r * 20, "branch"); }.bind(this));
+        this.operations.set('e', function(m:number) { this.moveAndDraw(m, r * 40, "branch"); }.bind(this));
+    }
+
+    chanceTurtleDisable() {
+        if (Math.random() < this.chanceDisable) {
+            this.turtleCurrent.enabled = false;
+        }
     }
 
     moveAndDraw(
+        multiplier: number = 1,
         radius: number = Turtle.DEFAULT_RADIUS,
         type: string = null) {
         if (!this.turtleCurrent.enabled) {
@@ -54,7 +78,7 @@ class LSystemProcessor {
         mat4.identity(assetTrans);
         mat4.fromTranslation(translation, this.turtleCurrent.position);
         let wScale = 1;//(1 / Math.pow(this.turtleCurrent.depth, 1.5)) * 2;
-        mat4.fromScaling(scale, [radius * wScale, this.moveScale, radius * wScale]);
+        mat4.fromScaling(scale, [radius * wScale, this.moveScale * multiplier, radius * wScale]);
 
         mat4.multiply(assetTrans, scale, assetTrans);
         mat4.multiply(assetTrans, this.turtleCurrent.rotTransform, assetTrans);
@@ -63,11 +87,12 @@ class LSystemProcessor {
             assetTrans,
             type == null ? this.turtleCurrent.type : type);
 
-        this.move();
+        this.move(multiplier);
     }
     
     getRotateRads() {
-        return this.rotateRads;// + ((Math.random() - 0.5) / 8) * this.turtleCurrent.depth;
+        return this.rotateRads + (this.rotateVariance * Math.random()) -
+        (this.rotateVariance / 2);
     }
 
     rotateXPositive() {
@@ -167,12 +192,16 @@ class LSystemProcessor {
             rot);
     }
     
-    move() {
+    move(multiplier:number = 1) {
         let newPos:vec3 = vec3.create();
         let moveVec: vec3 = vec3.create();
         vec3.multiply(moveVec,
             this.turtleCurrent.orientation,
-            [this.moveScale, this.moveScale, this.moveScale]);
+            [
+                this.moveScale * multiplier,
+                this.moveScale * multiplier,
+                this.moveScale * multiplier
+            ]);
 
         vec3.add(newPos,
             this.turtleCurrent.position,
@@ -192,18 +221,11 @@ class LSystemProcessor {
         this.turtleCurrent.position = vec3.clone(old.position);
         this.turtleCurrent.depth = old.depth;
         
-        this.turtleCurrent.enabled = old.enabled ?
-            (Math.random() > -1) : false;
+        this.turtleCurrent.enabled = old.enabled;
 
         this.turtleCurrent.orientation = vec3.clone(old.orientation);
         this.turtleCurrent.rotTransform = mat4.clone(old.rotTransform);
         this.turtleCurrent.type = old.type;
-
-        // let x: number = this.turtleCurrent.depth;
-        // let chanceDisable:number = x*x / (1 + x*x);
-        // if (NoiseFunctions::random() < chanceDisable) {
-        //     this.turtleCurrent.disabled = true;
-        // }
         this.turtleCurrent.depth++;
     }
 
@@ -220,11 +242,26 @@ class LSystemProcessor {
     }
 
     draw() {
+        let sameCount = 0;
         for (let i = 0; i < this.state.length; i++) {
             const c = this.state.charAt(i);
             if (!this.operations.has(c)) {
                 continue;
             }
+
+            if (this.state.charAt(i + 1) === c &&
+                (c === 'F' || c === 'a' || c === 'b'|| c === 'c'|| c === 'd'|| c === 'e'))  {
+                sameCount++;
+                continue;
+            } else {
+                let op = this.operations.get(c).bind(this);
+                if (sameCount > 0) {
+                    op(sameCount + 1);
+                    sameCount = 0;
+                    continue;
+                }
+            }
+
 
             let op = this.operations.get(c).bind(this);
             op();

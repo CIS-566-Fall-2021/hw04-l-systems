@@ -22,15 +22,11 @@ out vec4 fs_Nor;
 void main()
 {
     fs_Col = vs_Col;
-    fs_Pos = vs_Pos;
+
     mat4 transMatrix = mat4(vs_Trans1, vs_Trans2, vs_Trans3, vs_Trans4);
 
     mat3 invTranspose = mat3(inverse(transpose(transMatrix)));
     fs_Nor = vec4(invTranspose * vec3(vs_Nor), 0); 
-    //fs_Nor = vs_Nor;
-    //vec3 offset = vs_Translate;
-    //offset.z = (sin((u_Time/20.f + offset.x) * 3.14159 * 0.1) + cos((u_Time/20.f + offset.y) * 3.14159 * 0.1)) * 1.5;
-
-    //vec4 billboardPos = transMatrix * vec4(vs_Pos.x * u_CameraAxes[0] + vs_Pos.y * u_CameraAxes[1], 1.f);
-    gl_Position = u_ViewProj * transMatrix * fs_Pos;
+    fs_Pos = transMatrix * vs_Pos;
+    gl_Position = u_ViewProj * fs_Pos;
 }
