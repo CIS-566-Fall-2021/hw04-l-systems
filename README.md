@@ -14,7 +14,7 @@ https://stackoverflow.com/questions/8798771/perlin-noise-for-1d - very simple 1d
 
 https://stackoverflow.com/questions/14446447/how-to-read-a-local-text-file - for loading obj
 
-GH pages link: https://github.com/theCollegeBoardOfc/hw04-l-systems/settings/pages
+GH pages link: https://thecollegeboardofc.github.io/hw04-l-systems/
 
 Description:
 
