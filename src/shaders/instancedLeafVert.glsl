@@ -14,17 +14,6 @@ in vec2 vs_UV; // Non-instanced, and presently unused in main(). Feel free to us
 
 in float vs_Scale;
 
-// The transformation matrix in the form of 4 vec4s
-in vec4 vs_matCol0;
-in vec4 vs_matCol1;
-in vec4 vs_matCol2;
-in vec4 vs_matCol3;
-
-out vec4 fs_matCol0;
-out vec4 fs_matCol1;
-out vec4 fs_matCol2;
-out vec4 fs_matCol3;
-
 out vec4 fs_Col;
 out vec4 fs_Pos;
 
@@ -39,31 +28,9 @@ void main()
 
     fs_Nor = vs_Nor;
 
-    fs_Scale = vs_Scale;
-
-    fs_matCol0 = vs_matCol0;
-    fs_matCol1 = vs_matCol1;
-    fs_matCol2 = vs_matCol2;
-    fs_matCol3 = vs_matCol3;
-
-
-
     vec3 offset = vs_Translate;
 
-
-    mat4 transformMat = mat4(vs_matCol0,
-                            vs_matCol1,
-                            vs_matCol2,
-                            vs_matCol3);
-
-    vec4 newPos = vec4(1.0, 1.0, 1.0, 1.0);
-    newPos = vs_Pos * vs_Scale;
-    newPos[1] = vs_Pos[1];
-    newPos[3] = 1.0;
-
-    newPos = vec4(vec3(transformMat * newPos) + offset, 1.0);
-
-    gl_Position = u_ViewProj * newPos;
+    gl_Position = u_ViewProj * (vs_Pos + vec4(vs_Translate, 0.0));
 
     //offset.z = (sin((u_Time + offset.x) * 3.14159 * 0.1) + cos((u_Time + offset.y) * 3.14159 * 0.1)) * 1.5;
     //vec3 billboardPos = offset + vs_Pos.x * u_CameraAxes[0] + vs_Pos.y * u_CameraAxes[1];

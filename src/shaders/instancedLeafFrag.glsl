@@ -20,9 +20,7 @@ void main()
     //float dist = 1.0 - (length(fs_Pos.xyz) * 2.0);
     //out_Col = vec4(dist) * fs_Col;
 
-    out_Col = fs_Col;
+    //out_Col = fs_Col;
 
-    //out_Col = vec4(fs_Scale / 1.0, 0.0, 0.0, 1.0);
-
-    //out_Col = vec4(0.1647, 0.4863, 0.1373, 1.0);
+    out_Col = vec4(0.1647, 0.4863, 0.1373, 1.0);
 }
