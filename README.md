@@ -1,5 +1,29 @@
 # Homework 4: L-systems
 
+David Li: 13109274.
+
+External Resourcess:
+
+https://community.khronos.org/t/quaternion-functions-for-glsl/50140 - For Quaternion Transformations
+
+https://github.com/helenl9098/hw04-l-systems/blob/master/src/lsystem/turtle.ts - For Quaternion Transformations (Used with permission from creator)
+
+http://dev.thi.ng/gradients/ - cosine color pallete picker
+
+https://stackoverflow.com/questions/8798771/perlin-noise-for-1d - very simple 1d noise
+
+https://stackoverflow.com/questions/14446447/how-to-read-a-local-text-file - for loading obj
+
+GH pages link: https://github.com/theCollegeBoardOfc/hw04-l-systems/settings/pages
+
+Description:
+
+Implemented the recommended classes. Turtle class stores a forward vector an up vector. When rotations are applied to the Turtle the forward vector is changed. When the Turtle is moved, it moves along the foward vector. Everytime we want to save the turtle's position, a copy of the current turtle is made and the current turtle's iteration is incremented. Iteration is used to determine the scale factor of the branches. Drawing Rule has all possible operations that the turtle may take. Expansion Rule has the rules that dictate how the LString expands. The instance renderer draws a cylinder and a leaf. These simple objs were made in Maya. The LSystem class has a function that returns all transformations for instances based on the provided LSystem String. These instances are fed into the Shaderprogram which in turn sends the drawings to the shader files. In the vertex shader all the different transformations are applied, and sin function is used to animate the tree with y position as input. The background is created using a cosine color pallete and simple 1d noise function. The angle, iterations and a randomness factor can be adjusted to manipulate the shape of the tree.
+
+
+
+
+
 For this assignment, you will design a set of formal grammar rules to create
 a plant life using an L-system program. Once again, you will work from a
 TypeScript / WebGL 2.0 base code like the one you used in homework 0. You will
