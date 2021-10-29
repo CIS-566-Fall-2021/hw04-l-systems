@@ -1,5 +1,5 @@
 import {vec3, vec4} from 'gl-matrix';
-import * as Stats from 'Stats-js';
+//import * as Stats from 'Stats-js';
 import * as DAT from 'dat-gui';
 import Square from './geometry/Square';
 import ScreenQuad from './geometry/ScreenQuad';
@@ -157,12 +157,12 @@ function loadScene() {
 
 function main() {
   // Initial display for framerate   
-  const stats = Stats();
-  stats.setMode(0);
-  stats.domElement.style.position = 'absolute';
-  stats.domElement.style.left = '0px';
-  stats.domElement.style.top = '0px';
-  document.body.appendChild(stats.domElement);
+  //const stats = Stats();
+  //stats.setMode(0);
+  //stats.domElement.style.position = 'absolute';
+  //stats.domElement.style.left = '0px';
+  //stats.domElement.style.top = '0px';
+  //document.body.appendChild(stats.domElement);
   
   //console.log(final);
   // Add controls to the gui
@@ -206,7 +206,7 @@ function main() {
   // This function will be called every frame
   function tick() {
     camera.update();
-    stats.begin();
+    //stats.begin();
     instancedShader.setTime(time);
     flat.setTime(time++);
     gl.viewport(0, 0, window.innerWidth, window.innerHeight);
@@ -220,7 +220,7 @@ function main() {
       leaves,
       cylinder,
     ]);
-    stats.end();
+   // stats.end();
 
     // Tell the browser to call `tick` again whenever it renders a new frame
     requestAnimationFrame(tick);
