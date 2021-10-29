@@ -7,6 +7,9 @@ abstract class Drawable {
   bufPos: WebGLBuffer;
   bufNor: WebGLBuffer;
   bufTranslate: WebGLBuffer;
+  bufCol1: WebGLBuffer;
+  bufCol2: WebGLBuffer;
+  bufCol3: WebGLBuffer;
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
 
@@ -15,6 +18,9 @@ abstract class Drawable {
   norGenerated: boolean = false;
   colGenerated: boolean = false;
   translateGenerated: boolean = false;
+  col1Generated: boolean = false;
+  col2Generated: boolean = false;
+  col3Generated: boolean = false;
   uvGenerated: boolean = false;
 
   numInstances: number = 0; // How many instances of this Drawable the shader program should draw
@@ -26,6 +32,9 @@ abstract class Drawable {
     gl.deleteBuffer(this.bufPos);
     gl.deleteBuffer(this.bufNor);
     gl.deleteBuffer(this.bufCol);
+    gl.deleteBuffer(this.bufCol1);
+    gl.deleteBuffer(this.bufCol2);
+    gl.deleteBuffer(this.bufCol3);
     gl.deleteBuffer(this.bufTranslate);
     gl.deleteBuffer(this.bufUV);
   }
@@ -50,6 +59,18 @@ abstract class Drawable {
     this.bufCol = gl.createBuffer();
   }
 
+  generateCol1() {
+    this.col1Generated = true;
+    this.bufCol1 = gl.createBuffer();
+  }
+  generateCol2() {
+    this.col2Generated = true;
+    this.bufCol2 = gl.createBuffer();
+  }
+  generateCol3() {
+    this.col3Generated = true;
+    this.bufCol3 = gl.createBuffer();
+  }
   generateTranslate() {
     this.translateGenerated = true;
     this.bufTranslate = gl.createBuffer();
@@ -93,6 +114,25 @@ abstract class Drawable {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTranslate);
     }
     return this.translateGenerated;
+  }
+  bindCol1(): boolean {
+    if (this.col1Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol1);
+    }
+    return this.col1Generated;
+  }
+
+  bindCol2(): boolean {
+    if (this.col2Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol2);
+    }
+    return this.col2Generated;
+  }
+  bindCol3(): boolean {
+    if (this.col3Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol3);
+    }
+    return this.col3Generated;
   }
 
   bindUV(): boolean {
