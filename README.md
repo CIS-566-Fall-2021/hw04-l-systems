@@ -43,11 +43,16 @@ adding too much noise (like the upper part did when replicated too many times).
 In addition, when implementing, I added several new operations to the L-system
 grammar to add non-determinism.
 
-### Pitfalls
-Okay, here we go. I am not happy with this submission outside of the L-System
+### Areas for Growth
+(toned this down plz don't kill me Rachel)
+
+~~Okay, here we go. I am not happy with this submission outside of the L-System
 itself. First of all, I am actually just using a scaled cube (!!!) for each of
 the branches, and only change the color for the "pine-needles"/leaves. While
-this actually works relatively well for what I was going for, it lacks refinement.
+this actually works relatively well for what I was going for, it lacks refinement.~~
+
+I am using a simple, deformed cube to represent both the leaves and the trunk
+portions of my tree.
 
 I had actually used Blender for the first time to generate a simple cylinder
 to use for the branches, but this blew up for a number of reasons: 1. the Mesh
@@ -56,11 +61,19 @@ using the cylinder, my poor laptop nearly blew up at 3 iterations due to the
 extra vertices/faces, and 3. it wasn't even that much better than the scaled
 cube. So I stayed with the super-primitive form.
 
-Finally, the silly little blue plane underneath the tree is just there to tick
-off a box: Boooo.
+~~Finally, the silly little blue plane underneath the tree is just there to tick
+off a box: Boooo.~~
+
+I had hoped to get a nice little terrain going along with maybe a procedural sky,
+but I ran out of time, and I was having trouble getting the terrain to generate
+in an efficient manner. I probably would need to move the deformation code into
+the CPU side and do it offline, but that would be a fair amount of work. So, in
+the meanwhile, there is a simple square plane that has shader deformations applied
+undert the tree.
 
 I need to get a little 3D modeling experience and then maybe I can come revisit
-this a little. 
+this a little, however, I am at a bit of a loss on how to leverage 3D models to 
+make my tree look nicer at the moment.
 
 ## References
 - https://glmatrix.net/docs/module-mat4.html
