@@ -1,13 +1,17 @@
 import {vec3, vec4} from 'gl-matrix';
 import Drawable from '../rendering/gl/Drawable';
 import {gl} from '../globals';
-import * as Loader from 'webgl-obj-loader';
+const Loader = require('webgl-obj-loader');
 
 class Mesh extends Drawable {
   indices: Uint32Array;
   positions: Float32Array;
   normals: Float32Array;
   colors: Float32Array;
+  transforms1: Float32Array; // data for bufTransform
+  transforms2: Float32Array;
+  transforms3: Float32Array;
+  transforms4: Float32Array;
   uvs: Float32Array;
   center: vec4;
 
@@ -43,10 +47,10 @@ class Mesh extends Drawable {
     idxTemp = loadedMesh.indices;
 
     // white vert color for now
-    this.colors = new Float32Array(posTemp.length);
-    for (var i = 0; i < posTemp.length; ++i){
-      this.colors[i] = 1.0;
-    }
+    // this.colors = new Float32Array(posTemp.length);
+    // for (var i = 0; i < posTemp.length; ++i){
+    //   this.colors[i] = 1.0;
+    // }
 
     this.indices = new Uint32Array(idxTemp);
     this.normals = new Float32Array(norTemp);
@@ -58,6 +62,8 @@ class Mesh extends Drawable {
     this.generateNor();
     this.generateUV();
     this.generateCol();
+    // this.generateTranslate(); // test
+    this.generateTransform();
 
     this.count = this.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
@@ -69,14 +75,33 @@ class Mesh extends Drawable {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
     gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
-    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    // gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    // gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUV);
     gl.bufferData(gl.ARRAY_BUFFER, this.uvs, gl.STATIC_DRAW);
 
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
+  }
+
+  setInstanceVBOs(transforms1: Float32Array, transforms2: Float32Array, transforms3: Float32Array, transforms4: Float32Array, colors: Float32Array) {
+    this.colors = colors;
+    this.transforms1 = transforms1;
+    this.transforms2 = transforms2;
+    this.transforms3 = transforms3;
+    this.transforms4 = transforms4;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransform1);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transforms1, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransform2);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transforms2, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransform3);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transforms3, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransform4);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transforms4, gl.STATIC_DRAW);
   }
 };
 
