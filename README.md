@@ -11,11 +11,11 @@ Live Demo: https://ciscprocess.github.io/hw04-l-systems/
 <p align="center">Sample generated tree.</p>
 
 ## Initial Process
-Like many of the things I've worked on, this tree is definitely lacking in artistic
+~~Like many of the things I've worked on, this tree is definitely lacking in artistic
 refinement. Looking at some of my classmates submissions is really eye-opening
-for me.
+for me.~~
 
-That being said, most of my focus went to the L-System itself in this assignment,
+Most of my focus went to the L-System itself in this assignment,
 with the idea of modeling a sort of "thorny"/"pine" looking tree without much
 regard to matching any real-life tree. I was aiming for "prickly, yet elegant"
 and to that end I believe I mostly succeeded. Kinda.
