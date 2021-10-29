@@ -7,6 +7,10 @@ abstract class Drawable {
   bufPos: WebGLBuffer;
   bufNor: WebGLBuffer;
   bufTranslate: WebGLBuffer;
+  bufTrans1: WebGLBuffer;
+  bufTrans2: WebGLBuffer;
+  bufTrans3: WebGLBuffer;
+  bufTrans4: WebGLBuffer;
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
 
@@ -15,6 +19,11 @@ abstract class Drawable {
   norGenerated: boolean = false;
   colGenerated: boolean = false;
   translateGenerated: boolean = false;
+  trans1Generated: boolean = false;
+  trans2Generated: boolean = false;
+  trans3Generated: boolean = false;
+  trans4Generated: boolean = false;
+
   uvGenerated: boolean = false;
 
   numInstances: number = 0; // How many instances of this Drawable the shader program should draw
@@ -55,6 +64,26 @@ abstract class Drawable {
     this.bufTranslate = gl.createBuffer();
   }
 
+  generateTrans1() {
+    this.trans1Generated = true;
+    this.bufTrans1 = gl.createBuffer();
+  }
+
+  generateTrans2() {
+    this.trans2Generated = true;
+    this.bufTrans2 = gl.createBuffer();
+  }
+
+  generateTrans3() {
+    this.trans3Generated = true;
+    this.bufTrans3 = gl.createBuffer();
+  }
+
+  generateTrans4() {
+    this.trans4Generated = true;
+    this.bufTrans4 = gl.createBuffer();
+  }
+
   generateUV() {
     this.uvGenerated = true;
     this.bufUV = gl.createBuffer();
@@ -92,7 +121,40 @@ abstract class Drawable {
     if (this.translateGenerated) {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTranslate);
     }
+
     return this.translateGenerated;
+  }
+
+  bindTrans1(): boolean {
+    if (this.trans1Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTrans1);
+    }
+
+    return this.trans1Generated;
+  }
+
+  bindTrans2(): boolean {
+    if (this.trans2Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTrans2);
+    }
+
+    return this.trans2Generated;
+  }
+
+  bindTrans3(): boolean {
+    if (this.trans3Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTrans3);
+    }
+
+    return this.trans3Generated;
+  }
+
+  bindTrans4(): boolean {
+    if (this.trans4Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTrans4);
+    }
+
+    return this.trans4Generated;
   }
 
   bindUV(): boolean {
