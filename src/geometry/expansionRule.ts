@@ -28,7 +28,7 @@ class expansionRule {
         //let p21: PostConditions = {chance: 1, condition: "[CFX]F[CFX"}
         this.postConditionsArray2.push(p2);
        // this.postConditionsArray2.push(p21);
-        let p3: PostConditions = {chance: .5, condition: "[&&FX]"};
+        let p3: PostConditions = {chance: .5, condition: "[&&FX][*F]"};
         let p31: PostConditions = {chance: 1.0, condition: "*[*FX]"};
         let p32: PostConditions = {chance: 1., condition: "*F"};
         let p33: PostConditions = {chance: 1, condition: "&"};

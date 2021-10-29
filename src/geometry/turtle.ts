@@ -85,7 +85,7 @@ class Turtle {
       let transMat = mat4.create();
       mat4.multiply(transMat, translateMat, rotMat);
       //return translateMat;
-      let scaleMat = mat4.fromValues(3 / this.depth, 0, 0, 0, 0, 2 / (this.depth * .5), 0, 0, 0, 0, 3 / this.depth, 0, 0, 0, 0, 1);
+      let scaleMat = mat4.fromValues(3 / this.depth, 0, 0, 0, 0, 1.5 / (this.depth * .5), 0, 0, 0, 0, 3 / this.depth, 0, 0, 0, 0, 1);
       mat4.multiply(transMat, transMat, scaleMat);
       return transMat;
   }

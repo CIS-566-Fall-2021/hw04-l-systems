@@ -20,8 +20,8 @@ import { FORMERR } from 'dns';
 const controls = {
   'Load Scene': loadScene,
   'iterations': 3,
-  'AngleMin': 25,
-  'AngleMax': 65,
+  'AngleMin': 15,
+  'AngleMax': 40,
   'LeafAmount': 5,
 };
 
