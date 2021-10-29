@@ -63,7 +63,7 @@ class drawingRule{
     drawLeaf() {
         let transMat = mat4.create();
 
-        for(let i = 0; i < 5; i++)
+        for(let i = 0; i < this.leafAmount; i++)
         {
             transMat = this.currTurtle.getLeafTransformation();
             //transMat = rotMat;

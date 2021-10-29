@@ -25,6 +25,9 @@ const controls = {
   'LeafAmount': 5,
 };
 
+
+
+ 
 let square: Square;
 let screenQuad: ScreenQuad;
 let time: number = 0.0;
