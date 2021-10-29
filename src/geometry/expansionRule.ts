@@ -69,18 +69,10 @@ class expansionRule {
                     s = currList[j].condition;
                 }
                 prev = currList[j].chance
-                // console.log(currList[j].chance);
-                // if( >= r)
-                // {
-                   
-                // }
-                // else
-                // {
-                //     s = currList[j+1].condition;
-                // }
+              
             }
            newString = newString + s;
-           //newString = this.axiom.replace(this.axiom[i], s);
+
            
         }
         else

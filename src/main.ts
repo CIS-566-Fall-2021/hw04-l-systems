@@ -52,10 +52,7 @@ function loadScene() {
 
 
   
-  //let axiom = "F";
-  //let rule = new expansionRule(axiom, 1);
-  //rule.fillMap();
-  //let final = rule.parseGrammar();
+  
   let drawing = new drawingRule(controls.iterations, controls.AngleMin, controls.AngleMax, controls.LeafAmount);
   drawing.setString();
   drawing.setMap();
@@ -86,21 +83,21 @@ function loadScene() {
   t1.push(1);
   t1.push(1);
   let transform4: Float32Array = new Float32Array(drawing.col4);
-  //console.log(transform3);
-  //console.log(transform4);
-  //leafCol
+
   let leafCol1 = [.996, .792, .219, 1];
   let leafCol2 = [.996, .929, .505, 1.0];
   let leafCol3 = [.964, .419, .219, 1];
+  let leafCol4 = [.843, .505, .176];
   let leafArray = [];
   leafArray.push(leafCol1);
   leafArray.push(leafCol2);
   leafArray.push(leafCol3);
+  leafArray.push(leafCol4);
   for(let i = 0; i < (tr1.length / 4.0); i++)
   {
     for(let j = 0; j < (tr1.length / 4.0); j++)
     {
-      let r = Math.random() * (2 - 0) + 0;
+      let r = Math.random() * (3 - 0) + 0;
       if(r > 0 && r < 1){
         leaveCol.push(.996);
         leaveCol.push(.792);
@@ -114,11 +111,19 @@ function loadScene() {
         leaveCol.push(.505);
         leaveCol.push(1);
       }
-      else{
+      else if(r > 2 && r < 3){
         leaveCol.push(.964);
         leaveCol.push(.419);
         leaveCol.push(.219);
         leaveCol.push(1);
+      }
+      else
+      {
+        leaveCol.push(.843);
+        leaveCol.push(.505);
+        leaveCol.push(.176);
+        leaveCol.push(1);
+
       }
       
       //leaveCol.push(newL[0]);
