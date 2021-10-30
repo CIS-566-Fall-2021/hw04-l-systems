@@ -1,8 +1,27 @@
 import {vec3, vec4} from 'gl-matrix';
 import Drawable from '../rendering/gl/Drawable';
 import {gl} from '../globals';
-import * as Loader from 'webgl-obj-loader';
+// import * as Loader from 'webgl-obj-loader';
+const Loader = require("webgl-obj-loader")
 
+function readTextFile(file: string):string
+{
+    var allText = "";
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                allText = rawFile.responseText;
+            }
+        }
+    }
+    rawFile.send(null);
+    return allText;
+}
 class Mesh extends Drawable {
   indices: Uint32Array;
   positions: Float32Array;
@@ -10,6 +29,12 @@ class Mesh extends Drawable {
   colors: Float32Array;
   uvs: Float32Array;
   center: vec4;
+  transformCols0: Float32Array;
+  transformCols1: Float32Array;
+  transformCols2: Float32Array;
+  transformCols3: Float32Array;
+
+  offsets: Float32Array; // Data for bufTranslate
 
   objString: string;
 
@@ -26,7 +51,7 @@ class Mesh extends Drawable {
     let uvsTemp: Array<number> = [];
     let idxTemp: Array<number> = [];
 
-    var loadedMesh = new Loader.Mesh(this.objString);
+    var loadedMesh = new Loader.Mesh(readTextFile(this.objString));
 
     //posTemp = loadedMesh.vertices;
     for (var i = 0; i < loadedMesh.vertices.length; i++) {
@@ -58,6 +83,11 @@ class Mesh extends Drawable {
     this.generateNor();
     this.generateUV();
     this.generateCol();
+    // this.generateTranslate();
+    this.generateTransformCol0();
+    this.generateTransformCol1();
+    this.generateTransformCol2();
+    this.generateTransformCol3();
 
     this.count = this.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
@@ -77,6 +107,25 @@ class Mesh extends Drawable {
 
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
+  }
+
+  setInstanceVBOs(transformCols0Temp: Float32Array, transformCols1Temp: Float32Array, transformCols2Temp: Float32Array, transformCols3Temp: Float32Array, colors: Float32Array) {
+    this.colors = colors;
+    this.transformCols0 = transformCols0Temp;
+    this.transformCols1 = transformCols1Temp;
+    this.transformCols2 = transformCols2Temp;
+    this.transformCols3 = transformCols3Temp;
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformCols0);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transformCols0, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformCols1);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transformCols1, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformCols2);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transformCols2, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransformCols3);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transformCols3, gl.STATIC_DRAW);
   }
 };
 
