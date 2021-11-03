@@ -41,6 +41,9 @@ class ShaderProgram {
   unifEye: WebGLUniformLocation;
   unifUp: WebGLUniformLocation;
   unifDimensions: WebGLUniformLocation;
+  unifTexture: WebGLUniformLocation;
+
+  texture:WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -70,6 +73,7 @@ class ShaderProgram {
     this.unifEye   = gl.getUniformLocation(this.prog, "u_Eye");
     this.unifRef   = gl.getUniformLocation(this.prog, "u_Ref");
     this.unifUp   = gl.getUniformLocation(this.prog, "u_Up");
+    this.unifTexture     = gl.getUniformLocation(this.prog, "u_Texture");
   }
 
   use() {
@@ -77,6 +81,53 @@ class ShaderProgram {
       gl.useProgram(this.prog);
       activeProgram = this.prog;
     }
+  }
+
+  createTexture(url:string) {
+    // setting up texture in OpenGL
+    let texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    // Fill the texture with a 1x1 blue pixel.
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                  new Uint8Array([0, 0, 255, 255]));
+    // Asynchronously load an image
+    var image = new Image();
+    image.src = url;
+    image.crossOrigin = "anonymous";
+  
+    console.log(image.src);
+    image.addEventListener('load', function() {
+      // Now that the image has loaded make copy it to the texture.
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+  
+      // Check if the image is a power of 2 in both dimensions.
+      if (ShaderProgram.isPowerOf2(image.width) && ShaderProgram.isPowerOf2(image.height)) {
+         // Yes, it's a power of 2. Generate mips.
+         gl.generateMipmap(gl.TEXTURE_2D);
+      } else {
+         // No, it's not a power of 2. Turn of mips and set wrapping to clamp to edge
+         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      }
+    });
+  
+    return texture;
+  
+  }
+
+  static isPowerOf2(value : number) {
+    return (value & (value - 1)) === 0;
+  }
+
+  setBaseColorTexture(url:string) {
+    this.use();
+    this.texture = this.createTexture(url)
+    console.log("setting base texture")
+    console.log(this.texture)
+    gl.uniform1i(this.unifTexture, 0);
+
   }
 
   setEyeRefUp(eye: vec3, ref: vec3, up: vec3) {
@@ -191,6 +242,12 @@ class ShaderProgram {
       gl.enableVertexAttribArray(this.attrTransform4);
       gl.vertexAttribPointer(this.attrTransform4, 4, gl.FLOAT, false, 0, 0);
       gl.vertexAttribDivisor(this.attrTransform4, 1); // Advance 1 index in pos VBO for each vertex
+    }
+
+    if (this.unifTexture != -1) {
+      gl.activeTexture(gl.TEXTURE0); //GL supports up to 32 different active textures at once(0 - 31)
+      gl.bindTexture(gl.TEXTURE_2D, this.texture);
+      gl.uniform1i(this.unifTexture, 0);
     }
 
     d.bindIdx();

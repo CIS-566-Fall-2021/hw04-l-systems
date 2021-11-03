@@ -24,10 +24,11 @@ out vec4 fs_Col;
 out vec4 fs_Pos;
 out vec4 fs_Nor;
 out vec4 fs_LightVec;
+out vec2 fs_UV;
 
 void main()
 {
-
+    fs_UV = vs_UV;
     vec4 lightPos = vec4(0.0, 30.0, 30.0, 1.0);
 
     fs_Col = vs_Col;
