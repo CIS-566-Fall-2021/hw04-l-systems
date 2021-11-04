@@ -14,8 +14,13 @@ uniform sampler2D u_barkTexture;
 uniform sampler2D u_leafTexture;
 uniform sampler2D u_potTexture;
 uniform sampler2D u_groundTexture;
-uniform sampler2D u_appleTexture;
+uniform sampler2D u_appleTexture1;
+uniform sampler2D u_appleTexture2;
 uniform sampler2D u_mulchTexture;
+
+float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
 
 void main()
 {
@@ -31,8 +36,14 @@ void main()
     } else if (fs_MeshId[0] == 3.0) {
         diffuseColor = texture(u_groundTexture, fs_UV);
     } else if (fs_MeshId[0] == 4.0) {
-        diffuseColor = texture(u_appleTexture, fs_UV);
-        diffuseColor.r = diffuseColor.r * 1.2;
+        float appleProb = rand(fs_InstanceId.xy);
+        if (appleProb < 0.5) {
+            diffuseColor = texture(u_appleTexture1, fs_UV);
+        } else {
+            diffuseColor = texture(u_appleTexture2, fs_UV);
+        }
+        //diffuseColor = texture(u_appleTexture1, fs_UV);
+
     } else if (fs_MeshId[0] == 5.0) {
         diffuseColor = texture(u_mulchTexture, fs_UV);
     }

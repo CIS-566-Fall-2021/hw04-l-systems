@@ -47,14 +47,16 @@ class ShaderProgram {
   unifLeafTexture: WebGLUniformLocation;
   unifPotTexture: WebGLUniformLocation;
   unifGroundTexture: WebGLUniformLocation;
-  unifAppleTexture: WebGLUniformLocation;
+  unifAppleTexture1: WebGLUniformLocation;
+  unifAppleTexture2: WebGLUniformLocation;
   unifMulchTexture: WebGLUniformLocation;
 
   barkTexture:WebGLUniformLocation;
   leafTexture:WebGLUniformLocation;
   potTexture:WebGLUniformLocation;
   groundTexture:WebGLUniformLocation;
-  appleTexture:WebGLUniformLocation;
+  appleTexture1:WebGLUniformLocation;
+  appleTexture2:WebGLUniformLocation;
   mulchTexture:WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
@@ -93,7 +95,8 @@ class ShaderProgram {
     this.unifLeafTexture     = gl.getUniformLocation(this.prog, "u_leafTexture");
     this.unifPotTexture     = gl.getUniformLocation(this.prog, "u_potTexture");
     this.unifGroundTexture     = gl.getUniformLocation(this.prog, "u_groundTexture");
-    this.unifAppleTexture     = gl.getUniformLocation(this.prog, "u_appleTexture");
+    this.unifAppleTexture1     = gl.getUniformLocation(this.prog, "u_appleTexture1");
+    this.unifAppleTexture2     = gl.getUniformLocation(this.prog, "u_appleTexture2");
     this.unifMulchTexture     = gl.getUniformLocation(this.prog, "u_mulchTexture");
   }
 
@@ -142,20 +145,22 @@ class ShaderProgram {
     return (value & (value - 1)) === 0;
   }
 
-  setTextures(textureMap: Map<number, string>) {
+  setTextures() {
     this.use();
-    this.barkTexture = this.createTexture(textureMap.get(0))
-    this.leafTexture = this.createTexture(textureMap.get(1))
-    this.potTexture = this.createTexture(textureMap.get(2))
-    this.groundTexture = this.createTexture(textureMap.get(3))
-    this.appleTexture = this.createTexture(textureMap.get(4))
-    this.mulchTexture = this.createTexture(textureMap.get(5))
+    this.barkTexture = this.createTexture('./src/textures/bark.jpg')
+    this.leafTexture = this.createTexture('./src/textures/leaf.jpg')
+    this.potTexture = this.createTexture('./src/textures/terracotta.jpg')
+    this.groundTexture = this.createTexture('./src/textures/ground.jpg')
+    this.appleTexture1 = this.createTexture('./src/textures/apple1.jpg')
+    this.appleTexture2 = this.createTexture('./src/textures/apple2.jpg')
+    this.mulchTexture = this.createTexture('./src/textures/mulch.jpg')
     gl.uniform1i(this.unifBarkTexture, 0);
     gl.uniform1i(this.unifLeafTexture, 1);
     gl.uniform1i(this.unifPotTexture, 2);
     gl.uniform1i(this.unifGroundTexture, 3);
-    gl.uniform1i(this.unifAppleTexture, 4);
+    gl.uniform1i(this.unifAppleTexture1, 4);
     gl.uniform1i(this.unifMulchTexture, 5);
+    gl.uniform1i(this.unifAppleTexture2, 6);
   }
 
   setEyeRefUp(eye: vec3, ref: vec3, up: vec3) {
@@ -309,10 +314,10 @@ class ShaderProgram {
       gl.uniform1i(this.unifGroundTexture, 3);
     }
 
-    if (this.unifAppleTexture != -1) {
+    if (this.unifAppleTexture1 != -1) {
       gl.activeTexture(gl.TEXTURE4); //GL supports up to 32 different active textures at once(0 - 31)
-      gl.bindTexture(gl.TEXTURE_2D, this.appleTexture);
-      gl.uniform1i(this.unifAppleTexture, 4);
+      gl.bindTexture(gl.TEXTURE_2D, this.appleTexture1);
+      gl.uniform1i(this.unifAppleTexture1, 4);
     }
 
     if (this.unifMulchTexture != -1) {
@@ -321,6 +326,11 @@ class ShaderProgram {
       gl.uniform1i(this.unifMulchTexture, 5);
     }
 
+    if (this.unifAppleTexture2 != -1) {
+      gl.activeTexture(gl.TEXTURE6); //GL supports up to 32 different active textures at once(0 - 31)
+      gl.bindTexture(gl.TEXTURE_2D, this.appleTexture2);
+      gl.uniform1i(this.unifAppleTexture2, 6);
+    }
 
     d.bindIdx();
     // drawElementsInstanced uses the vertexAttribDivisor for each "in" variable to

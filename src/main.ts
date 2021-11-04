@@ -438,14 +438,7 @@ function main() {
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/instanced-frag.glsl')),
   ]);
   
-  let textureMap = new Map();
-  textureMap.set(plantCylinder.meshId, './src/textures/bark.jpg');
-  textureMap.set(leaf.meshId, './src/textures/leaf.jpg');
-  textureMap.set(pot.meshId, './src/textures/terracotta.jpg');
-  textureMap.set(ground.meshId, './src/textures/ground.jpg');
-  textureMap.set(apple.meshId, './src/textures/apple.jpg');
-  textureMap.set(dirt.meshId, './src/textures/mulch.jpg');
-  instancedShader.setTextures(textureMap);
+  instancedShader.setTextures();
 
   const flat = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/flat-vert.glsl')),
