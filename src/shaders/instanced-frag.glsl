@@ -12,6 +12,7 @@ in vec4 fs_InstanceId;
 out vec4 out_Col;
 uniform sampler2D u_barkTexture;
 uniform sampler2D u_leafTexture;
+uniform sampler2D u_leafTexture2;
 uniform sampler2D u_potTexture;
 uniform sampler2D u_groundTexture;
 uniform sampler2D u_appleTexture1;
@@ -30,7 +31,18 @@ void main()
     if (fs_MeshId[0] == 0.0) {
         diffuseColor = texture(u_barkTexture, fs_UV);
     } else if (fs_MeshId[0] == 1.0) {
-        diffuseColor = texture(u_leafTexture, fs_UV);
+        float leafProb = rand(fs_InstanceId.xy);
+        if (leafProb < 0.5) {
+            diffuseColor = texture(u_leafTexture, fs_UV);
+        } else {
+            diffuseColor = texture(u_leafTexture2, fs_UV);
+        }
+        float alpha = diffuseColor.w;
+        if(diffuseColor.w < 0.3) {
+            discard;
+        } else {
+            alpha = 1.0;
+        }
     } else if (fs_MeshId[0] == 2.0) {
         diffuseColor = texture(u_potTexture, fs_UV);
     } else if (fs_MeshId[0] == 3.0) {

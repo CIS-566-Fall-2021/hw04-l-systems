@@ -35,7 +35,7 @@ let time: number = 0.0;
 let plantCylinderOBJ: string = readTextFile('./src/geometry/plantCylinder.obj');
 let plantCylinder: Mesh;
 
-let leafOBJ: string = readTextFile('./src/geometry/leaf.obj');
+let leafOBJ: string = readTextFile('./src/geometry/leafPlane.obj');
 let leaf: Mesh;
 
 let potOBJ: string = readTextFile('./src/geometry/pot.obj');
