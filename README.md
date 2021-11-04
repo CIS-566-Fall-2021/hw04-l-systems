@@ -28,6 +28,9 @@ The user can control the density of apples in the tree by increasing or decreasi
 ![image](high_apples.PNG)
 ![image](low_apples.PNG)
 
+## Final Touches
+I also implemented textures by loading in images and using UV coordinates to project them on to the meshes. I uploaded 2 different textures for both apples and leaves and set a probility to a random value to increase variation. Additionally I added fbm clouds to background's flat shader to add a bit more detail to the overall image.
+
 ## Resources
 https://synesenom.github.io/ran/
 I used this library to generate a seeded random number in order to generate the same number every time the function is called.
