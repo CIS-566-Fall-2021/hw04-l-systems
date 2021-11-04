@@ -15,6 +15,7 @@ uniform sampler2D u_leafTexture;
 uniform sampler2D u_potTexture;
 uniform sampler2D u_groundTexture;
 uniform sampler2D u_appleTexture;
+uniform sampler2D u_mulchTexture;
 
 void main()
 {
@@ -32,6 +33,8 @@ void main()
     } else if (fs_MeshId[0] == 4.0) {
         diffuseColor = texture(u_appleTexture, fs_UV);
         diffuseColor.r = diffuseColor.r * 1.2;
+    } else if (fs_MeshId[0] == 5.0) {
+        diffuseColor = texture(u_mulchTexture, fs_UV);
     }
    
     float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));

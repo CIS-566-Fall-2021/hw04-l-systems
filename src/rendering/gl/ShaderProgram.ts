@@ -48,12 +48,14 @@ class ShaderProgram {
   unifPotTexture: WebGLUniformLocation;
   unifGroundTexture: WebGLUniformLocation;
   unifAppleTexture: WebGLUniformLocation;
+  unifMulchTexture: WebGLUniformLocation;
 
   barkTexture:WebGLUniformLocation;
   leafTexture:WebGLUniformLocation;
   potTexture:WebGLUniformLocation;
   groundTexture:WebGLUniformLocation;
   appleTexture:WebGLUniformLocation;
+  mulchTexture:WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -92,6 +94,7 @@ class ShaderProgram {
     this.unifPotTexture     = gl.getUniformLocation(this.prog, "u_potTexture");
     this.unifGroundTexture     = gl.getUniformLocation(this.prog, "u_groundTexture");
     this.unifAppleTexture     = gl.getUniformLocation(this.prog, "u_appleTexture");
+    this.unifMulchTexture     = gl.getUniformLocation(this.prog, "u_mulchTexture");
   }
 
   use() {
@@ -146,11 +149,13 @@ class ShaderProgram {
     this.potTexture = this.createTexture(textureMap.get(2))
     this.groundTexture = this.createTexture(textureMap.get(3))
     this.appleTexture = this.createTexture(textureMap.get(4))
+    this.mulchTexture = this.createTexture(textureMap.get(5))
     gl.uniform1i(this.unifBarkTexture, 0);
     gl.uniform1i(this.unifLeafTexture, 1);
     gl.uniform1i(this.unifPotTexture, 2);
     gl.uniform1i(this.unifGroundTexture, 3);
-
+    gl.uniform1i(this.unifAppleTexture, 4);
+    gl.uniform1i(this.unifMulchTexture, 5);
   }
 
   setEyeRefUp(eye: vec3, ref: vec3, up: vec3) {
@@ -308,6 +313,12 @@ class ShaderProgram {
       gl.activeTexture(gl.TEXTURE4); //GL supports up to 32 different active textures at once(0 - 31)
       gl.bindTexture(gl.TEXTURE_2D, this.appleTexture);
       gl.uniform1i(this.unifAppleTexture, 4);
+    }
+
+    if (this.unifMulchTexture != -1) {
+      gl.activeTexture(gl.TEXTURE5); //GL supports up to 32 different active textures at once(0 - 31)
+      gl.bindTexture(gl.TEXTURE_2D, this.mulchTexture);
+      gl.uniform1i(this.unifMulchTexture, 5);
     }
 
 

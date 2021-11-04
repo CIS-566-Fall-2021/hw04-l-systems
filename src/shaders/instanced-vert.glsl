@@ -49,7 +49,7 @@ void main()
     fs_MeshId = vs_MeshId;
     fs_InstanceId = vs_InstanceId;
 
-    fs_UV = transformUV();
+    fs_UV = vs_UV;
     vec4 lightPos = vec4(0.0, 30.0, 30.0, 1.0);
 
     fs_Col = vs_Col;
