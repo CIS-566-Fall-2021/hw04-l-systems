@@ -26,7 +26,7 @@ class ShaderProgram {
   attrCol: number; // This time, it's an instanced rendering attribute, so each particle can have a unique color. Not per-vertex, but per-instance.
   attrTranslate: number; // Used in the vertex shader during instanced rendering to offset the vertex positions to the particle's drawn position.
   attrUV: number;
-  attrId: number;
+  attrMeshId: number;
 
   attrTransform1: number;
   attrTransform2: number;
@@ -68,7 +68,7 @@ class ShaderProgram {
     this.attrPos = gl.getAttribLocation(this.prog, "vs_Pos");
     this.attrCol = gl.getAttribLocation(this.prog, "vs_Col");
     this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
-    this.attrId = gl.getAttribLocation(this.prog, "vs_Id");
+    this.attrMeshId = gl.getAttribLocation(this.prog, "vs_MeshId");
     this.attrTranslate = gl.getAttribLocation(this.prog, "vs_Translate");
     this.attrUV = gl.getAttribLocation(this.prog, "vs_UV");
     this.attrTransform1 = gl.getAttribLocation(this.prog, "vs_Transform1");
@@ -239,10 +239,10 @@ class ShaderProgram {
       gl.vertexAttribDivisor(this.attrUV, 0); // Advance 1 index in pos VBO for each vertex
     }
 
-    if (this.attrId != -1 && d.bindId()) {
-      gl.enableVertexAttribArray(this.attrId);
-      gl.vertexAttribPointer(this.attrId, 2, gl.FLOAT, false, 0, 0);
-      gl.vertexAttribDivisor(this.attrId, 0); // Advance 1 index in pos VBO for each vertex
+    if (this.attrMeshId != -1 && d.bindMeshId()) {
+      gl.enableVertexAttribArray(this.attrMeshId);
+      gl.vertexAttribPointer(this.attrMeshId, 2, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrMeshId, 0); // Advance 1 index in pos VBO for each vertex
     }
 
     // TODO: Set up attribute data for additional instanced rendering data as needed
@@ -319,7 +319,7 @@ class ShaderProgram {
     if (this.attrPos != -1) gl.disableVertexAttribArray(this.attrPos);
     if (this.attrNor != -1) gl.disableVertexAttribArray(this.attrNor);
     if (this.attrCol != -1) gl.disableVertexAttribArray(this.attrCol);
-    if (this.attrId != -1) gl.disableVertexAttribArray(this.attrId);
+    if (this.attrMeshId != -1) gl.disableVertexAttribArray(this.attrMeshId);
     if (this.attrTranslate != -1) gl.disableVertexAttribArray(this.attrTranslate);
     if (this.attrUV != -1) gl.disableVertexAttribArray(this.attrUV);
     if (this.attrTransform1 != -1) gl.disableVertexAttribArray(this.attrTransform1);

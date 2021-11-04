@@ -6,7 +6,7 @@ in vec4 fs_Pos;
 in vec4 fs_Nor;
 in vec4 fs_LightVec;
 in vec2 fs_UV;
-in vec4 fs_Id;
+in vec4 fs_MeshId;
 
 out vec4 out_Col;
 uniform sampler2D u_barkTexture;
@@ -20,15 +20,15 @@ void main()
     vec4 diffuseColor = fs_Col;
 
     // Draws texture depending on the Mesh Id
-    if (fs_Id[0] == 0.0) {
+    if (fs_MeshId[0] == 0.0) {
         diffuseColor = texture(u_barkTexture, fs_UV);
-    } else if (fs_Id[0] == 1.0) {
+    } else if (fs_MeshId[0] == 1.0) {
         diffuseColor = texture(u_leafTexture, fs_UV);
-    } else if (fs_Id[0] == 2.0) {
+    } else if (fs_MeshId[0] == 2.0) {
         diffuseColor = texture(u_potTexture, fs_UV);
-    } else if (fs_Id[0] == 3.0) {
+    } else if (fs_MeshId[0] == 3.0) {
         diffuseColor = texture(u_groundTexture, fs_UV);
-    } else if (fs_Id[0] == 4.0) {
+    } else if (fs_MeshId[0] == 4.0) {
         diffuseColor = texture(u_appleTexture, fs_UV);
         diffuseColor.r = diffuseColor.r * 1.2;
     }

@@ -9,23 +9,23 @@ class Mesh extends Drawable {
   normals: Float32Array;
   colors: Float32Array;
   uvs: Float32Array;
-  idArray: Float32Array;
+  meshIdArray: Float32Array;
   center: vec4;
 
   objString: string;
-  id: number;
+  meshId: number;
 
   transform1: Float32Array; // Data for bufTransform1
   transform2: Float32Array; // Data for bufTransform1
   transform3: Float32Array; // Data for bufTransform1
   transform4: Float32Array; // Data for bufTransform1
 
-  constructor(objString: string, id: number, center: vec3) {
+  constructor(objString: string, meshId: number, center: vec3) {
     super(); // Call the constructor of the super class. This is required.
     this.center = vec4.fromValues(center[0], center[1], center[2], 1);
 
     this.objString = objString;
-    this.id = id;
+    this.meshId = meshId;
   }
 
   create() {  
@@ -33,7 +33,7 @@ class Mesh extends Drawable {
     let norTemp: Array<number> = [];
     let uvsTemp: Array<number> = [];
     let idxTemp: Array<number> = [];
-    let idTemp: Array<number> = [];
+    let meshIdTemp: Array<number> = [];
 
     var loadedMesh = new Loader.Mesh(this.objString);
 
@@ -50,8 +50,8 @@ class Mesh extends Drawable {
 
     // pushes back the same Mesh id for all positions
     for (var i = 0; i < loadedMesh.vertices.length; i++) {
-      idTemp.push(this.id);
-      if (i % 3 == 2) idTemp.push(1.0);
+      meshIdTemp.push(this.meshId);
+      if (i % 3 == 2) meshIdTemp.push(1.0);
     }
 
     uvsTemp = loadedMesh.textures;
@@ -61,14 +61,14 @@ class Mesh extends Drawable {
     this.normals = new Float32Array(norTemp);
     this.positions = new Float32Array(posTemp);
     this.uvs = new Float32Array(uvsTemp);
-    this.idArray = new Float32Array(idTemp);
+    this.meshIdArray = new Float32Array(meshIdTemp);
 
     this.generateIdx();
     this.generatePos();
     this.generateNor();
     this.generateUV();
     this.generateCol();
-    this.generateId();
+    this.generateMeshId();
     this.generateTransform1();
     this.generateTransform2();
     this.generateTransform3();
@@ -85,7 +85,7 @@ class Mesh extends Drawable {
     gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufId);
-    gl.bufferData(gl.ARRAY_BUFFER, this.idArray, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, this.meshIdArray, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUV);
     gl.bufferData(gl.ARRAY_BUFFER, this.uvs, gl.STATIC_DRAW);

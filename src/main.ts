@@ -397,11 +397,11 @@ function main() {
   ]);
   
   let textureMap = new Map();
-  textureMap.set(plantCylinder.id, './src/textures/bark.jpg');
-  textureMap.set(leaf.id, './src/textures/leaf.jpg');
-  textureMap.set(pot.id, './src/textures/terracotta.jpg');
-  textureMap.set(ground.id, './src/textures/ground.jpg');
-  textureMap.set(apple.id, './src/textures/apple.jpg');
+  textureMap.set(plantCylinder.meshId, './src/textures/bark.jpg');
+  textureMap.set(leaf.meshId, './src/textures/leaf.jpg');
+  textureMap.set(pot.meshId, './src/textures/terracotta.jpg');
+  textureMap.set(ground.meshId, './src/textures/ground.jpg');
+  textureMap.set(apple.meshId, './src/textures/apple.jpg');
   instancedShader.setTextures(textureMap);
 
   const flat = new ShaderProgram([

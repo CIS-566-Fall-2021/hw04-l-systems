@@ -20,7 +20,7 @@ abstract class Drawable {
   posGenerated: boolean = false;
   norGenerated: boolean = false;
   colGenerated: boolean = false;
-  idGenerated: boolean = false;
+  meshIdGenerated: boolean = false;
   translateGenerated: boolean = false;
   uvGenerated: boolean = false;
   transform1Generated: boolean = false;
@@ -66,8 +66,8 @@ abstract class Drawable {
     this.bufCol = gl.createBuffer();
   }
 
-  generateId() {
-    this.idGenerated = true;
+  generateMeshId() {
+    this.meshIdGenerated = true;
     this.bufId = gl.createBuffer();
   }
 
@@ -129,11 +129,11 @@ abstract class Drawable {
     return this.colGenerated;
   }
 
-  bindId(): boolean {
-    if (this.idGenerated) {
+  bindMeshId(): boolean {
+    if (this.meshIdGenerated) {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufId);
     }
-    return this.idGenerated;
+    return this.meshIdGenerated;
   }
 
   bindTranslate(): boolean {
