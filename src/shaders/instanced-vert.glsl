@@ -28,6 +28,20 @@ out vec4 fs_LightVec;
 out vec2 fs_UV;
 out vec4 fs_Id;
 
+// vec2 transformUV()
+// {
+//     float tex_divs = 5.0;
+//     float uv_scale = 1.0 / tex_divs;
+//     float cel_y = uv_scale * floor(vs_UVCell * uv_scale);
+//     float cel_x = uv_scale * (mod(vs_UVCell, tex_divs));
+//     float nextcel_y = uv_scale * floor(vs_UVCell * uv_scale + 1.0);
+//     vec2 transformedUV = vs_UV;
+//     transformedUV *= uv_scale;
+//     transformedUV += vec2(cel_x, cel_y);
+    
+//     return transformedUV;
+// }
+
 void main()
 {
     fs_Id = vs_Id;

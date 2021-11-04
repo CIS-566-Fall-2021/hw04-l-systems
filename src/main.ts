@@ -396,7 +396,10 @@ function main() {
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/instanced-frag.glsl')),
   ]);
   
-  instancedShader.setTextures(['./src/textures/bark.jpg']);
+  let textureMap = new Map();
+  textureMap.set(plantCylinder.id, './src/textures/bark.jpg');
+  textureMap.set(leaf.id, './src/textures/leaf.jpg');
+  instancedShader.setTextures(textureMap);
 
   const flat = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/flat-vert.glsl')),

@@ -10,6 +10,7 @@ in vec4 fs_Id;
 
 out vec4 out_Col;
 uniform sampler2D u_barkTexture;
+uniform sampler2D u_leafTexture;
 
 void main()
 {
@@ -17,6 +18,8 @@ void main()
 
     if (fs_Id[0] == 0.0) {
         diffuseColor = texture(u_barkTexture, fs_UV);
+    } else if (fs_Id[0] == 1.0) {
+        diffuseColor = texture(u_leafTexture, fs_UV);
     }
    
     float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));
