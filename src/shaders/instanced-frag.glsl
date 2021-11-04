@@ -13,6 +13,7 @@ uniform sampler2D u_barkTexture;
 uniform sampler2D u_leafTexture;
 uniform sampler2D u_potTexture;
 uniform sampler2D u_groundTexture;
+uniform sampler2D u_appleTexture;
 
 void main()
 {
@@ -27,6 +28,9 @@ void main()
         diffuseColor = texture(u_potTexture, fs_UV);
     } else if (fs_Id[0] == 3.0) {
         diffuseColor = texture(u_groundTexture, fs_UV);
+    } else if (fs_Id[0] == 4.0) {
+        diffuseColor = texture(u_appleTexture, fs_UV);
+        diffuseColor.r = diffuseColor.r * 1.2;
     }
    
     float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));

@@ -401,6 +401,7 @@ function main() {
   textureMap.set(leaf.id, './src/textures/leaf.jpg');
   textureMap.set(pot.id, './src/textures/terracotta.jpg');
   textureMap.set(ground.id, './src/textures/ground.jpg');
+  textureMap.set(apple.id, './src/textures/apple.jpg');
   instancedShader.setTextures(textureMap);
 
   const flat = new ShaderProgram([
