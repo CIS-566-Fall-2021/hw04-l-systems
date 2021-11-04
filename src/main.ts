@@ -44,7 +44,7 @@ let pot: Mesh;
 let dirtOBJ: string = readTextFile('./src/geometry/dirt.obj');
 let dirt: Mesh;
 
-let groundOBJ: string = readTextFile('./src/geometry/ground.obj');
+let groundOBJ: string = readTextFile('./src/geometry/grass.obj');
 let ground: Mesh;
 
 let appleOBJ: string = readTextFile('./src/geometry/apple.obj');
@@ -399,6 +399,7 @@ function main() {
   let textureMap = new Map();
   textureMap.set(plantCylinder.id, './src/textures/bark.jpg');
   textureMap.set(leaf.id, './src/textures/leaf.jpg');
+  textureMap.set(pot.id, './src/textures/terracotta.jpg');
   instancedShader.setTextures(textureMap);
 
   const flat = new ShaderProgram([

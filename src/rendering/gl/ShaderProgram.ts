@@ -44,9 +44,11 @@ class ShaderProgram {
   unifDimensions: WebGLUniformLocation;
   unifBarkTexture: WebGLUniformLocation;
   unifLeafTexture: WebGLUniformLocation;
+  unifPotTexture: WebGLUniformLocation;
 
   barkTexture:WebGLUniformLocation;
   leafTexture:WebGLUniformLocation;
+  potTexture:WebGLUniformLocation;
 
   constructor(shaders: Array<Shader>) {
     this.prog = gl.createProgram();
@@ -81,6 +83,8 @@ class ShaderProgram {
     // Textures
     this.unifBarkTexture     = gl.getUniformLocation(this.prog, "u_barkTexture");
     this.unifLeafTexture     = gl.getUniformLocation(this.prog, "u_leafTexture");
+    this.unifPotTexture     = gl.getUniformLocation(this.prog, "u_potTexture");
+
   }
 
   use() {
@@ -131,14 +135,11 @@ class ShaderProgram {
   setTextures(textureMap: Map<number, string>) {
     this.use();
     this.barkTexture = this.createTexture(textureMap.get(0))
-    // if(textureMap.get(1)) {
-      this.leafTexture = this.createTexture(textureMap.get(1))
-    // } else {
-    //   console.log("leaf texture not found")
-    // }
-    console.log("setting base texture")
+    this.leafTexture = this.createTexture(textureMap.get(1))
+    this.potTexture = this.createTexture(textureMap.get(2))
     gl.uniform1i(this.unifBarkTexture, 0);
     gl.uniform1i(this.unifLeafTexture, 1);
+    gl.uniform1i(this.unifPotTexture, 2);
 
   }
 
@@ -272,6 +273,12 @@ class ShaderProgram {
       gl.activeTexture(gl.TEXTURE1); //GL supports up to 32 different active textures at once(0 - 31)
       gl.bindTexture(gl.TEXTURE_2D, this.leafTexture);
       gl.uniform1i(this.unifLeafTexture, 1);
+    }
+
+    if (this.unifPotTexture != -1) {
+      gl.activeTexture(gl.TEXTURE2); //GL supports up to 32 different active textures at once(0 - 31)
+      gl.bindTexture(gl.TEXTURE_2D, this.potTexture);
+      gl.uniform1i(this.unifPotTexture, 2);
     }
 
     d.bindIdx();

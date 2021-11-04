@@ -11,15 +11,19 @@ in vec4 fs_Id;
 out vec4 out_Col;
 uniform sampler2D u_barkTexture;
 uniform sampler2D u_leafTexture;
+uniform sampler2D u_potTexture;
 
 void main()
 {
     vec4 diffuseColor = fs_Col;
 
+    // Draws texture depending on the Mesh Id
     if (fs_Id[0] == 0.0) {
         diffuseColor = texture(u_barkTexture, fs_UV);
     } else if (fs_Id[0] == 1.0) {
         diffuseColor = texture(u_leafTexture, fs_UV);
+    } else if (fs_Id[0] == 2.0) {
+        diffuseColor = texture(u_potTexture, fs_UV);
     }
    
     float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));
