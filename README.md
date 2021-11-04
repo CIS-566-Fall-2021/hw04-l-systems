@@ -1,4 +1,4 @@
-# Homework 4: L-systems
+# Procedural Apple Tree
 Name : Samantha Lee
 PennKey : smlee18
 
