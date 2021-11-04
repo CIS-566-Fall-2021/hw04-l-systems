@@ -66,14 +66,14 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   pot = new Mesh(potOBJ, 2, vec3.fromValues(0.0, 0.0, 0.0));
   pot.create();
 
-  dirt = new Mesh(dirtOBJ, 3, vec3.fromValues(0.0, 0.0, 0.0));
-  dirt.create();
-
-  ground = new Mesh(groundOBJ, 4, vec3.fromValues(0.0, 0.0, 0.0));
+  ground = new Mesh(groundOBJ, 3, vec3.fromValues(0.0, 0.0, 0.0));
   ground.create();
   
-  apple = new Mesh(appleOBJ, 5, vec3.fromValues(0.0, 0.0, 0.0));
+  apple = new Mesh(appleOBJ, 4, vec3.fromValues(0.0, 0.0, 0.0));
   apple.create();
+
+  dirt = new Mesh(dirtOBJ, 5, vec3.fromValues(0.0, 0.0, 0.0));
+  dirt.create();
 
   // Create plant
   let plant = new Plant("TTTTTTTTX", controls.iterations, 30.0, seed, branchThickness, appleDensity);
@@ -400,6 +400,7 @@ function main() {
   textureMap.set(plantCylinder.id, './src/textures/bark.jpg');
   textureMap.set(leaf.id, './src/textures/leaf.jpg');
   textureMap.set(pot.id, './src/textures/terracotta.jpg');
+  textureMap.set(ground.id, './src/textures/ground.jpg');
   instancedShader.setTextures(textureMap);
 
   const flat = new ShaderProgram([
