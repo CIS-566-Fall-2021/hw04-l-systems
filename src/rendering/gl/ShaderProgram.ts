@@ -27,6 +27,7 @@ class ShaderProgram {
   attrTranslate: number; // Used in the vertex shader during instanced rendering to offset the vertex positions to the particle's drawn position.
   attrUV: number;
   attrMeshId: number;
+  attrInstanceId: number;
 
   attrTransform1: number;
   attrTransform2: number;
@@ -69,6 +70,7 @@ class ShaderProgram {
     this.attrCol = gl.getAttribLocation(this.prog, "vs_Col");
     this.attrNor = gl.getAttribLocation(this.prog, "vs_Nor");
     this.attrMeshId = gl.getAttribLocation(this.prog, "vs_MeshId");
+    this.attrInstanceId = gl.getAttribLocation(this.prog, "vs_InstanceId");
     this.attrTranslate = gl.getAttribLocation(this.prog, "vs_Translate");
     this.attrUV = gl.getAttribLocation(this.prog, "vs_UV");
     this.attrTransform1 = gl.getAttribLocation(this.prog, "vs_Transform1");
@@ -245,6 +247,13 @@ class ShaderProgram {
       gl.vertexAttribDivisor(this.attrMeshId, 0); // Advance 1 index in pos VBO for each vertex
     }
 
+    if (this.attrInstanceId != -1 && d.bindInstanceId()) {
+      gl.enableVertexAttribArray(this.attrInstanceId);
+      gl.vertexAttribPointer(this.attrInstanceId, 4, gl.FLOAT, false, 0, 0);
+      gl.vertexAttribDivisor(this.attrInstanceId, 1); // Advance 1 index in pos VBO for each vertex
+    }
+
+
     // TODO: Set up attribute data for additional instanced rendering data as needed
 
     if (this.attrTransform1 != -1 && d.bindTransform1()) {
@@ -320,6 +329,7 @@ class ShaderProgram {
     if (this.attrNor != -1) gl.disableVertexAttribArray(this.attrNor);
     if (this.attrCol != -1) gl.disableVertexAttribArray(this.attrCol);
     if (this.attrMeshId != -1) gl.disableVertexAttribArray(this.attrMeshId);
+    if (this.attrInstanceId != -1) gl.disableVertexAttribArray(this.attrInstanceId);
     if (this.attrTranslate != -1) gl.disableVertexAttribArray(this.attrTranslate);
     if (this.attrUV != -1) gl.disableVertexAttribArray(this.attrUV);
     if (this.attrTransform1 != -1) gl.disableVertexAttribArray(this.attrTransform1);

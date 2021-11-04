@@ -83,6 +83,7 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   let num: number = plant.transformationMats.length;
 
   let colorsArray = [];
+  let instanceIdArray = [];
   let transform1Array = [];
   let transform2Array = [];
   let transform3Array = [];
@@ -109,6 +110,11 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
     transform4Array.push(T[14]);
     transform4Array.push(1);
 
+    instanceIdArray.push(i);
+    instanceIdArray.push(i);
+    instanceIdArray.push(i);
+    instanceIdArray.push(i);
+
     colorsArray.push(114.0 / 255.0);
     colorsArray.push(69.0 / 255.0);
     colorsArray.push(12.0 / 255.0);
@@ -116,18 +122,20 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   }
 
   let colors: Float32Array = new Float32Array(colorsArray);
+  let instanceIds: Float32Array = new Float32Array(instanceIdArray);
   let transform1: Float32Array = new Float32Array(transform1Array);
   let transform2: Float32Array = new Float32Array(transform2Array);
   let transform3: Float32Array = new Float32Array(transform3Array);
   let transform4: Float32Array = new Float32Array(transform4Array);
 
-  plantCylinder.setInstanceVBOs(colors, transform1, transform2, transform3, transform4);
+  plantCylinder.setInstanceVBOs(colors, instanceIds, transform1, transform2, transform3, transform4);
   plantCylinder.setNumInstances(plant.transformationMats.length);
 
   // Set up instanced rendering data arrays for plant's leaves
   let leafNum: number = plant.leafTransformationMats.length;
 
   let leafColorsArray = [];
+  let leafInstanceIdArray = [];
   let leafTransform1Array = [];
   let leafTransform2Array = [];
   let leafTransform3Array = [];
@@ -155,6 +163,11 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
     leafTransform4Array.push(T[14]);
     leafTransform4Array.push(1);
 
+    leafInstanceIdArray.push(i);
+    leafInstanceIdArray.push(i);
+    leafInstanceIdArray.push(i);
+    leafInstanceIdArray.push(i);
+
     leafColorsArray.push(32.0 / 255.0);
     leafColorsArray.push(132.0 / 255.0);
     leafColorsArray.push(77.0 / 255.0);
@@ -162,18 +175,20 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   }
 
   let leafColors: Float32Array = new Float32Array(leafColorsArray);
+  let leafInstanceIds: Float32Array = new Float32Array(leafInstanceIdArray);
   let leafTransform1: Float32Array = new Float32Array(leafTransform1Array);
   let leafTransform2: Float32Array = new Float32Array(leafTransform2Array);
   let leafTransform3: Float32Array = new Float32Array(leafTransform3Array);
   let leafTransform4: Float32Array = new Float32Array(leafTransform4Array);
 
-  leaf.setInstanceVBOs(leafColors, leafTransform1, leafTransform2, leafTransform3, leafTransform4);
+  leaf.setInstanceVBOs(leafColors, leafInstanceIds, leafTransform1, leafTransform2, leafTransform3, leafTransform4);
   leaf.setNumInstances(plant.leafTransformationMats.length);
 
   // Set up instanced rendering data arrays for apple
   let appleNum: number = plant.appleTransformationMats.length;
 
   let appleColorsArray = [];
+  let appleInstanceIdArray = [];
   let appleTransform1Array = [];
   let appleTransform2Array = [];
   let appleTransform3Array = [];
@@ -200,6 +215,11 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
     appleTransform4Array.push(T[14]);
     appleTransform4Array.push(1);
 
+    appleInstanceIdArray.push(i);
+    appleInstanceIdArray.push(i);
+    appleInstanceIdArray.push(i);
+    appleInstanceIdArray.push(i);
+
     appleColorsArray.push(185.0/255.0);
     appleColorsArray.push(25.0/255.0);
     appleColorsArray.push(7.0/255.0);
@@ -207,12 +227,13 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   }
 
   let appleColors: Float32Array = new Float32Array(appleColorsArray);
+  let appleInstanceIds: Float32Array = new Float32Array(appleInstanceIdArray);
   let appleTransform1: Float32Array = new Float32Array(appleTransform1Array);
   let appleTransform2: Float32Array = new Float32Array(appleTransform2Array);
   let appleTransform3: Float32Array = new Float32Array(appleTransform3Array);
   let appleTransform4: Float32Array = new Float32Array(appleTransform4Array);
 
-  apple.setInstanceVBOs(appleColors, appleTransform1, appleTransform2, appleTransform3, appleTransform4);
+  apple.setInstanceVBOs(appleColors, appleInstanceIds, appleTransform1, appleTransform2, appleTransform3, appleTransform4);
   apple.setNumInstances(appleNum);
 
   // Set up instanced rendering data arrays for pot
@@ -258,7 +279,7 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   let potTransform3: Float32Array = new Float32Array(potTransform3Array);
   let potTransform4: Float32Array = new Float32Array(potTransform4Array);
 
-  pot.setInstanceVBOs(potColors, potTransform1, potTransform2, potTransform3, potTransform4);
+  // pot.setInstanceVBOs(potColors, potTransform1, potTransform2, potTransform3, potTransform4);
   pot.setNumInstances(potNum);
 
   // Set up instanced rendering data arrays for dirt
@@ -304,7 +325,7 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   let dirtTransform3: Float32Array = new Float32Array(dirtTransform3Array);
   let dirtTransform4: Float32Array = new Float32Array(dirtTransform4Array);
 
-  dirt.setInstanceVBOs(dirtColors, dirtTransform1, dirtTransform2, dirtTransform3, dirtTransform4);
+  // dirt.setInstanceVBOs(dirtColors, dirtTransform1, dirtTransform2, dirtTransform3, dirtTransform4);
   dirt.setNumInstances(dirtNum);
 
   // Set up instanced rendering data arrays for ground
@@ -350,7 +371,7 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   let groundTransform3: Float32Array = new Float32Array(groundTransform3Array);
   let groundTransform4: Float32Array = new Float32Array(groundTransform4Array);
 
-  ground.setInstanceVBOs(groundColors, groundTransform1, groundTransform2, groundTransform3, groundTransform4);
+  // ground.setInstanceVBOs(groundColors, groundTransform1, groundTransform2, groundTransform3, groundTransform4);
   ground.setNumInstances(groundNum);
 }
 
@@ -430,9 +451,9 @@ function main() {
     renderer.render(camera, instancedShader, [
       plantCylinder,
       leaf,
-      pot,
-      ground,
-      dirt,
+      // pot,
+      // ground,
+      // dirt,
       apple,
     ]);
     stats.end();

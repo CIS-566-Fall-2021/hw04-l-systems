@@ -10,6 +10,7 @@ in vec4 vs_Pos; // Non-instanced; each particle is the same quad drawn in a diff
 in vec4 vs_Nor; // Non-instanced, and presently unused
 in vec4 vs_Col; // An instanced rendering attribute; each particle instance has a different color
 in vec4 vs_MeshId; // Id corresponding to mesh
+in vec4 vs_InstanceId; // Id corresponding to mesh instance
 
 //mat4 that we multiply by vs_Pos to get instances of a base cylinder traveling along our turtle path
 in vec4 vs_Transform1;
@@ -27,26 +28,28 @@ out vec4 fs_Nor;
 out vec4 fs_LightVec;
 out vec2 fs_UV;
 out vec4 fs_MeshId;
+out vec4 fs_InstanceId;
 
-// vec2 transformUV()
-// {
-//     float tex_divs = 5.0;
-//     float uv_scale = 1.0 / tex_divs;
-//     float cel_y = uv_scale * floor(vs_UVCell * uv_scale);
-//     float cel_x = uv_scale * (mod(vs_UVCell, tex_divs));
-//     float nextcel_y = uv_scale * floor(vs_UVCell * uv_scale + 1.0);
-//     vec2 transformedUV = vs_UV;
-//     transformedUV *= uv_scale;
-//     transformedUV += vec2(cel_x, cel_y);
+vec2 transformUV()
+{
+    float tex_divs = 15.0;
+    float uv_scale = 1.0 / tex_divs;
+    float cel_y = uv_scale * floor(vs_InstanceId[0] * uv_scale);
+    float cel_x = uv_scale * (mod(vs_InstanceId[0], tex_divs));
+    float nextcel_y = uv_scale * floor(vs_InstanceId[0] * uv_scale + 1.0);
+    vec2 transformedUV = vs_UV;
+    transformedUV *= uv_scale;
+    transformedUV += vec2(cel_x, cel_y);
     
-//     return transformedUV;
-// }
+    return transformedUV;
+}
 
 void main()
 {
     fs_MeshId = vs_MeshId;
+    fs_InstanceId = vs_InstanceId;
 
-    fs_UV = vs_UV;
+    fs_UV = transformUV();
     vec4 lightPos = vec4(0.0, 30.0, 30.0, 1.0);
 
     fs_Col = vs_Col;

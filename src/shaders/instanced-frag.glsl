@@ -7,6 +7,7 @@ in vec4 fs_Nor;
 in vec4 fs_LightVec;
 in vec2 fs_UV;
 in vec4 fs_MeshId;
+in vec4 fs_InstanceId;
 
 out vec4 out_Col;
 uniform sampler2D u_barkTexture;

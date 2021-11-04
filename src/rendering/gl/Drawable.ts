@@ -9,7 +9,8 @@ abstract class Drawable {
   bufTranslate: WebGLBuffer;
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
-  bufId: WebGLBuffer;
+  bufMeshId: WebGLBuffer;
+  bufInstanceId: WebGLBuffer;
 
   bufTransform1: WebGLBuffer;
   bufTransform2: WebGLBuffer;
@@ -21,6 +22,7 @@ abstract class Drawable {
   norGenerated: boolean = false;
   colGenerated: boolean = false;
   meshIdGenerated: boolean = false;
+  instanceIdGenerated: boolean = false;
   translateGenerated: boolean = false;
   uvGenerated: boolean = false;
   transform1Generated: boolean = false;
@@ -39,6 +41,8 @@ abstract class Drawable {
     gl.deleteBuffer(this.bufCol);
     gl.deleteBuffer(this.bufTranslate);
     gl.deleteBuffer(this.bufUV);
+    gl.deleteBuffer(this.bufMeshId);
+    gl.deleteBuffer(this.bufInstanceId);
 
     gl.deleteBuffer(this.bufTransform1);
     gl.deleteBuffer(this.bufTransform2);
@@ -68,7 +72,12 @@ abstract class Drawable {
 
   generateMeshId() {
     this.meshIdGenerated = true;
-    this.bufId = gl.createBuffer();
+    this.bufMeshId = gl.createBuffer();
+  }
+
+  generateInstanceId() {
+    this.instanceIdGenerated = true;
+    this.bufInstanceId = gl.createBuffer();
   }
 
   generateTranslate() {
@@ -131,9 +140,16 @@ abstract class Drawable {
 
   bindMeshId(): boolean {
     if (this.meshIdGenerated) {
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufId);
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufMeshId);
     }
     return this.meshIdGenerated;
+  }
+
+  bindInstanceId(): boolean {
+    if (this.instanceIdGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufInstanceId);
+    }
+    return this.instanceIdGenerated;
   }
 
   bindTranslate(): boolean {

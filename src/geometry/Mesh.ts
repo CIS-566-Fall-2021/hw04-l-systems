@@ -10,6 +10,7 @@ class Mesh extends Drawable {
   colors: Float32Array;
   uvs: Float32Array;
   meshIdArray: Float32Array;
+  instanceIds: Float32Array;
   center: vec4;
 
   objString: string;
@@ -69,6 +70,7 @@ class Mesh extends Drawable {
     this.generateUV();
     this.generateCol();
     this.generateMeshId();
+    this.generateInstanceId();
     this.generateTransform1();
     this.generateTransform2();
     this.generateTransform3();
@@ -84,7 +86,7 @@ class Mesh extends Drawable {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
     gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufId);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufMeshId);
     gl.bufferData(gl.ARRAY_BUFFER, this.meshIdArray, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUV);
@@ -94,16 +96,23 @@ class Mesh extends Drawable {
     this.objString = ""; // hacky clear
   }
 
-  setInstanceVBOs(colors: Float32Array, transform1: Float32Array, transform2: Float32Array, transform3: Float32Array, transform4: Float32Array) {
+  setInstanceVBOs(colors: Float32Array, instanceIds: Float32Array, transform1: Float32Array, transform2: Float32Array, transform3: Float32Array, transform4: Float32Array) {
     
     this.colors = colors;
+    this.instanceIds = instanceIds;
     this.transform1 = transform1;
     this.transform2 = transform2;
     this.transform3 = transform3;
     this.transform4 = transform4;
 
+    
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
     gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufInstanceId);
+    gl.bufferData(gl.ARRAY_BUFFER, this.instanceIds, gl.STATIC_DRAW);
+
+    console.log(this.instanceIds);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransform1);
     gl.bufferData(gl.ARRAY_BUFFER, this.transform1, gl.STATIC_DRAW);
