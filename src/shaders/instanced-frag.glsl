@@ -6,14 +6,19 @@ in vec4 fs_Pos;
 in vec4 fs_Nor;
 in vec4 fs_LightVec;
 in vec2 fs_UV;
+in vec4 fs_Id;
 
 out vec4 out_Col;
-uniform sampler2D u_Texture;
+uniform sampler2D u_barkTexture;
 
 void main()
 {
+    vec4 diffuseColor = fs_Col;
 
-    vec4 diffuseColor = texture(u_Texture, fs_UV);
+    if (fs_Id[0] == 0.0) {
+        diffuseColor = texture(u_barkTexture, fs_UV);
+    }
+   
     float diffuseTerm = dot(normalize(fs_Nor), normalize(fs_LightVec));
     diffuseTerm = clamp(diffuseTerm, 0.0, 1.0);
     float ambientTerm = 0.4;

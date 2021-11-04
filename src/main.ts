@@ -57,22 +57,22 @@ function loadScene(seed:number, branchThickness: number, appleDensity: number) {
   screenQuad = new ScreenQuad();
   screenQuad.create();
 
-  plantCylinder = new Mesh(plantCylinderOBJ, vec3.fromValues(0.0, 0.0, 0.0));
+  plantCylinder = new Mesh(plantCylinderOBJ, 0, vec3.fromValues(0.0, 0.0, 0.0));
   plantCylinder.create();
 
-  leaf = new Mesh(leafOBJ, vec3.fromValues(0.0, 0.0, 0.0));
+  leaf = new Mesh(leafOBJ, 1, vec3.fromValues(0.0, 0.0, 0.0));
   leaf.create();
 
-  pot = new Mesh(potOBJ, vec3.fromValues(0.0, 0.0, 0.0));
+  pot = new Mesh(potOBJ, 2, vec3.fromValues(0.0, 0.0, 0.0));
   pot.create();
 
-  dirt = new Mesh(dirtOBJ, vec3.fromValues(0.0, 0.0, 0.0));
+  dirt = new Mesh(dirtOBJ, 3, vec3.fromValues(0.0, 0.0, 0.0));
   dirt.create();
 
-  ground = new Mesh(groundOBJ, vec3.fromValues(0.0, 0.0, 0.0));
+  ground = new Mesh(groundOBJ, 4, vec3.fromValues(0.0, 0.0, 0.0));
   ground.create();
   
-  apple = new Mesh(appleOBJ, vec3.fromValues(0.0, 0.0, 0.0));
+  apple = new Mesh(appleOBJ, 5, vec3.fromValues(0.0, 0.0, 0.0));
   apple.create();
 
   // Create plant
@@ -395,8 +395,8 @@ function main() {
     new Shader(gl.VERTEX_SHADER, require('./shaders/instanced-vert.glsl')),
     new Shader(gl.FRAGMENT_SHADER, require('./shaders/instanced-frag.glsl')),
   ]);
-
-  instancedShader.setBaseColorTexture('./src/textures/bark.jpg')
+  
+  instancedShader.setTextures(['./src/textures/bark.jpg']);
 
   const flat = new ShaderProgram([
     new Shader(gl.VERTEX_SHADER, require('./shaders/flat-vert.glsl')),

@@ -9,6 +9,7 @@ uniform mat3 u_CameraAxes; // Used for rendering particles as billboards (quads 
 in vec4 vs_Pos; // Non-instanced; each particle is the same quad drawn in a different place
 in vec4 vs_Nor; // Non-instanced, and presently unused
 in vec4 vs_Col; // An instanced rendering attribute; each particle instance has a different color
+in vec4 vs_Id; // Id corresponding to mesh
 
 //mat4 that we multiply by vs_Pos to get instances of a base cylinder traveling along our turtle path
 in vec4 vs_Transform1;
@@ -25,9 +26,12 @@ out vec4 fs_Pos;
 out vec4 fs_Nor;
 out vec4 fs_LightVec;
 out vec2 fs_UV;
+out vec4 fs_Id;
 
 void main()
 {
+    fs_Id = vs_Id;
+
     fs_UV = vs_UV;
     vec4 lightPos = vec4(0.0, 30.0, 30.0, 1.0);
 

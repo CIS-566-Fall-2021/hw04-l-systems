@@ -9,6 +9,7 @@ abstract class Drawable {
   bufTranslate: WebGLBuffer;
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
+  bufId: WebGLBuffer;
 
   bufTransform1: WebGLBuffer;
   bufTransform2: WebGLBuffer;
@@ -19,6 +20,7 @@ abstract class Drawable {
   posGenerated: boolean = false;
   norGenerated: boolean = false;
   colGenerated: boolean = false;
+  idGenerated: boolean = false;
   translateGenerated: boolean = false;
   uvGenerated: boolean = false;
   transform1Generated: boolean = false;
@@ -62,6 +64,11 @@ abstract class Drawable {
   generateCol() {
     this.colGenerated = true;
     this.bufCol = gl.createBuffer();
+  }
+
+  generateId() {
+    this.idGenerated = true;
+    this.bufId = gl.createBuffer();
   }
 
   generateTranslate() {
@@ -120,6 +127,13 @@ abstract class Drawable {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
     }
     return this.colGenerated;
+  }
+
+  bindId(): boolean {
+    if (this.idGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufId);
+    }
+    return this.idGenerated;
   }
 
   bindTranslate(): boolean {

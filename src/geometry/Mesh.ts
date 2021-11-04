@@ -9,20 +9,23 @@ class Mesh extends Drawable {
   normals: Float32Array;
   colors: Float32Array;
   uvs: Float32Array;
+  idArray: Float32Array;
   center: vec4;
 
   objString: string;
+  id: number;
 
   transform1: Float32Array; // Data for bufTransform1
   transform2: Float32Array; // Data for bufTransform1
   transform3: Float32Array; // Data for bufTransform1
   transform4: Float32Array; // Data for bufTransform1
 
-  constructor(objString: string, center: vec3) {
+  constructor(objString: string, id: number, center: vec3) {
     super(); // Call the constructor of the super class. This is required.
     this.center = vec4.fromValues(center[0], center[1], center[2], 1);
 
     this.objString = objString;
+    this.id = id;
   }
 
   create() {  
@@ -30,6 +33,7 @@ class Mesh extends Drawable {
     let norTemp: Array<number> = [];
     let uvsTemp: Array<number> = [];
     let idxTemp: Array<number> = [];
+    let idTemp: Array<number> = [];
 
     var loadedMesh = new Loader.Mesh(this.objString);
 
@@ -44,6 +48,12 @@ class Mesh extends Drawable {
       if (i % 3 == 2) norTemp.push(0.0);
     }
 
+    // pushes back the same Mesh id for all positions
+    for (var i = 0; i < loadedMesh.vertices.length; i++) {
+      idTemp.push(this.id);
+      if (i % 3 == 2) idTemp.push(1.0);
+    }
+
     uvsTemp = loadedMesh.textures;
     idxTemp = loadedMesh.indices;
 
@@ -51,12 +61,14 @@ class Mesh extends Drawable {
     this.normals = new Float32Array(norTemp);
     this.positions = new Float32Array(posTemp);
     this.uvs = new Float32Array(uvsTemp);
+    this.idArray = new Float32Array(idTemp);
 
     this.generateIdx();
     this.generatePos();
     this.generateNor();
     this.generateUV();
     this.generateCol();
+    this.generateId();
     this.generateTransform1();
     this.generateTransform2();
     this.generateTransform3();
@@ -72,8 +84,8 @@ class Mesh extends Drawable {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
     gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
 
-    // gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
-    // gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufId);
+    gl.bufferData(gl.ARRAY_BUFFER, this.idArray, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUV);
     gl.bufferData(gl.ARRAY_BUFFER, this.uvs, gl.STATIC_DRAW);
