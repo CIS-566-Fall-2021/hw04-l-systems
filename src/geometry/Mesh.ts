@@ -85,8 +85,7 @@ class Mesh extends Drawable {
     this.objString = ""; // hacky clear
   }
 
-  setInstanceVBOs(offsets: Float32Array, colors: Float32Array,
-                  rotations: Float32Array, scales: Float32Array) {
+  setInstanceVBOs(offsets: Float32Array, colors: Float32Array, rotations: Float32Array, scales: Float32Array) {
     this.colors = colors;
     this.offsets = offsets;
     this.scales = scales;

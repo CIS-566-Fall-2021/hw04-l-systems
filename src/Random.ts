@@ -15,10 +15,10 @@ export default class Random {
         this.seedStr = seed;
         switch(this.SEEDER) {
             case Seeder.SFC:
-                this.seedGen = this.xmur3(this.seedStr);
+                this.seedGen = Random.xmur3(this.seedStr);
                 break;
             default:
-                this.seedGen = this.xmur3(this.seedStr);
+                this.seedGen = Random.xmur3(this.seedStr);
                 break;
         }
     }
@@ -40,17 +40,18 @@ export default class Random {
             this.d === null){
                 this.d = this.seedGen();
         }
+        // console.log(this.a,this.b,this.c,this.d);
         switch(this.SEEDER) {
             case Seeder.SFC:
-                return this.sfc32(this.a, this.b, this.c, this.d);
+                return Random.sfc32(this.a, this.b, this.c, this.d);
                 break;
             default:
-                return this.sfc32(this.a, this.b, this.c, this.d);
+                return Random.sfc32(this.a, this.b, this.c, this.d);
                 break;
         }
     }
 
-    xmur3(str: string) {
+    static xmur3(str: string) {
         for(var i = 0, h = 1779033703 ^ str.length; i < str.length; i++)
             h = Math.imul(h ^ str.charCodeAt(i), 3432918353),
             h = h << 13 | h >>> 19;
@@ -61,7 +62,7 @@ export default class Random {
         }
     }
 
-    sfc32(a: number, b: number, c: number, d: number) {
+    static sfc32(a: number, b: number, c: number, d: number) {
         return function() {
             a >>>= 0; b >>>= 0; c >>>= 0; d >>>= 0; 
             var t = (a + b) | 0;

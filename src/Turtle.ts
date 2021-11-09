@@ -6,21 +6,21 @@ export default class Turtle {
     // dist: number = 1;
     position: vec3 = vec3.create();
     orientation: vec3 = vec3.create();
-    up: vec3 = vec3.create();
+    // up: vec3 = vec3.create();
     depth: number;
-    scale: vec3 = vec3.create();
+    scale: number;
     quat: quat;
 
-    constructor(pos: vec3, orient: vec3) {
+    constructor(pos: vec3, orient: vec3, scale: number, depth: number) {
         // this.position = pos;
         // this.position = vec3.create();
         vec3.copy(this.position, pos);
         // this.orientation = orient;
         // this.orientation = vec3.create();
         vec3.copy(this.orientation, orient);
-        this.up = vec3.fromValues(0, 1, 0);
-        this.depth = 0;
-        this.scale = vec3.fromValues(1, 1, 1);
+        // this.up = vec3.fromValues(0, 1, 0);
+        this.depth = depth;
+        this.scale = scale;
         
         let initQuat: quat = quat.create();
         let initAng: number = 0.0;
@@ -28,10 +28,6 @@ export default class Turtle {
         quat.setAxisAngle(initQuat, initRotAxis, initAng);
         quat.normalize(initQuat, initQuat);
         this.quat = initQuat;
-    }
-
-    setScale(x: number, y: number, z: number) {
-        this.scale = vec3.fromValues(x, y, z);
     }
 
     rotate(axis: vec3, angle: number) {
@@ -42,56 +38,46 @@ export default class Turtle {
         quat.normalize(qua, qua);
         // console.log("qua", qua);
 
-        let ori = vec4.fromValues(this.orientation[0], this.orientation[1], this.orientation[2], 0);
-        vec4.transformQuat(ori, ori, qua);
-        this.orientation = vec3.fromValues(ori[0], ori[1], ori[2]);
+        let tempOri = vec4.fromValues(this.orientation[0], this.orientation[1], this.orientation[2], 0);
+        vec4.transformQuat(tempOri, tempOri, qua);
+        this.orientation = vec3.fromValues(tempOri[0], tempOri[1], tempOri[2]);
         // console.log("ori", ori)
         // console.log("orientation", this.orientation)
 
         // vec3.normalize(this.orientation, this.orientation);
-        quat.rotationTo(this.quat, this.up, this.orientation);
+        quat.rotationTo(this.quat, vec3.fromValues(0, 1, 0), this.orientation);
         quat.normalize(this.quat, this.quat);
+        vec3.normalize(this.orientation, this.orientation);
     }
 
-    getRotMat() {
-        let mat = mat4.create();
-        return mat4.fromQuat(mat, this.quat);
+    // getRotMat() {
+    //     let mat = mat4.create();
+    //     return mat4.fromQuat(mat, this.quat);
+    // }
+
+    getQuat() {
+        let tempQuat: quat = quat.create();
+        // quat.copy(tempQuat, this.quat);
+        quat.invert(tempQuat, this.quat);
+        return vec4.fromValues(tempQuat[0], tempQuat[1], tempQuat[2], tempQuat[3]);
     }
 
-    transformationMat(vector: vec3) {
-        let rotation = mat4.create();
-        mat4.fromQuat(rotation, this.quat);
-
-        let translation = mat4.create();
-        mat4.fromTranslation(translation, this.position);
-
-        let scale = mat4.create();
-        mat4.fromScaling(scale, this.scale);
-
-        var tempVec = vec4.fromValues(vector[0], vector[1], vector[2], 1);
-        let scaledResult = vec4.create();
-        vec4.transformMat4(scaledResult, tempVec, scale);
-        let rotatedResult = vec4.create();
-        vec4.transformMat4(rotatedResult, scaledResult, rotation);
-        let translatedResult = vec4.create();
-        vec4.transformMat4(translatedResult, rotatedResult, translation);
-        
-        console.log(translatedResult[0]);
-        console.log(translatedResult[1]);
-        console.log(translatedResult[2]);
-        return translatedResult;
+    getOffset() {
+        let copy = vec3.create();
+        return vec3.copy(copy, this.position);
     }
 
     moveForward(dist: number) {
+        // console.log("MOVING FORWARD", dist);
         vec3.normalize(this.orientation, this.orientation);
-        let move = vec3.fromValues(this.position[0] * dist, this.position[1] * dist, this.position[2] * dist);
+        let move = vec3.fromValues(this.orientation[0] * dist, this.orientation[1] * dist, this.orientation[2] * dist);
+        // console.log("move", move.toString())
         vec3.add(this.position, this.position, move);
+        return this;
     }
 
     copy() {
-        let t = new Turtle(this.position, this.orientation);
-        vec3.copy(t.up, this.up);
-        t.depth = this.depth;
+        let t = new Turtle(this.position, this.orientation, this.scale, this.depth);
         quat.copy(t.quat, this.quat);
         return t;
     }
@@ -100,7 +86,7 @@ export default class Turtle {
         let map = new Map([
             ["position", this.position.toString()],
             ["orientation", this.orientation.toString()],
-            ["up", this.up.toString()],
+            // ["up", this.up.toString()],
             ["depth", this.depth.toString()],
             ["scale", this.scale.toString()],
             ["quat", this.quat.toString()],
