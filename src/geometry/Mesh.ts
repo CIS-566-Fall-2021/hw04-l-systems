@@ -10,11 +10,20 @@ class Mesh extends Drawable {
   colors: Float32Array;
   uvs: Float32Array;
   center: vec4;
+  offsets: Float32Array; // Data for bufTranslate
+
+
+  transVec41: Float32Array;
+  transVec42: Float32Array;
+  transVec43: Float32Array;
+  transVec44: Float32Array;
 
   objString: string;
 
   constructor(objString: string, center: vec3) {
     super(); // Call the constructor of the super class. This is required.
+    //console.log("objstring");
+    //console.log(objString);
     this.center = vec4.fromValues(center[0], center[1], center[2], 1);
 
     this.objString = objString;
@@ -58,6 +67,13 @@ class Mesh extends Drawable {
     this.generateNor();
     this.generateUV();
     this.generateCol();
+    this.generateTranslate();
+
+
+    this.generateTransVec41();
+    this.generateTransVec42();
+    this.generateTransVec43();
+    this.generateTransVec44();
 
     this.count = this.indices.length;
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
@@ -78,6 +94,41 @@ class Mesh extends Drawable {
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
   }
+
+  setInstanceVBOs(offsets: Float32Array, colors: Float32Array) {
+    this.colors = colors;
+    this.offsets = offsets;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTranslate);
+    gl.bufferData(gl.ARRAY_BUFFER, this.offsets, gl.STATIC_DRAW);
+  }
+
+  setInstanceLSystemVBOs(tv41: Float32Array, tv42: Float32Array, tv43: Float32Array, tv44: Float32Array, colors: Float32Array) {
+    this.transVec41 = tv41;
+    this.transVec42 = tv42;
+    this.transVec43 = tv43;
+    this.transVec44 = tv44;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransVec41);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transVec41, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransVec42);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transVec42, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransVec43);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transVec43, gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufTransVec44);
+    gl.bufferData(gl.ARRAY_BUFFER, this.transVec44, gl.STATIC_DRAW);
+
+    this.colors = colors;
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
+    gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
+  }
+
 };
 
 export default Mesh;
