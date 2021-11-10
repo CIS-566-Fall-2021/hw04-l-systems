@@ -38,8 +38,8 @@ function loadScene() {
 
   // square = new Square();
   // let s = readTextFile('./sr/c/cylinder.obj');
-  let s = readTextFile('./src/cyl.obj');
-  let sL = readTextFile('./src/leaf.obj');
+  let s = readTextFile('cyl.obj');
+  let sL = readTextFile('leaf.obj');
   // console.log("cylinder", s);
   square = new Mesh(s, vec3.fromValues(0, 0, 0));
   square.create();
