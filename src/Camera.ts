@@ -1,5 +1,5 @@
 var CameraControls = require('3d-view-controls');
-import {vec3, mat4} from 'gl-matrix';
+import { vec3, mat4 } from 'gl-matrix';
 
 class Camera {
   controls: any;
@@ -8,7 +8,7 @@ class Camera {
   fovy: number = 45;
   aspectRatio: number = 1;
   near: number = 0.1;
-  far: number = 1000;
+  far: number = 2000;
   position: vec3 = vec3.create();
   direction: vec3 = vec3.create();
   target: vec3 = vec3.create();
@@ -17,10 +17,10 @@ class Camera {
   forward: vec3 = vec3.create();
 
   constructor(position: vec3, target: vec3) {
-    const canvas = <HTMLCanvasElement> document.getElementById('canvas');
+    const canvas = <HTMLCanvasElement>document.getElementById('canvas');
 
     this.controls = CameraControls(canvas, {
-      position: position,
+      eye: position,
       center: target,
     });
 
@@ -61,6 +61,6 @@ class Camera {
     vec3.cross(this.up, this.right, this.forward);
     vec3.normalize(this.up, this.up);
   }
-};
+}
 
 export default Camera;
