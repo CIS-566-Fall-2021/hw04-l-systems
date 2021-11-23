@@ -32,19 +32,19 @@ let square: Square;
 let screenQuad: ScreenQuad;
 let time: number = 0.0;
 
-let plantCylinderOBJ: string = readTextFile('./src/geometry/plantCylinder.obj');
+let plantCylinderOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/plantCylinder.obj');
 let plantCylinder: Mesh;
 
-let leafOBJ: string = readTextFile('./src/geometry/leafPlane.obj');
+let leafOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/leafPlane.obj');
 let leaf: Mesh;
 
-let potOBJ: string = readTextFile('./src/geometry/pot.obj');
+let potOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/pot.obj');
 let pot: Mesh;
 
-let dirtOBJ: string = readTextFile('./src/geometry/mulch.obj');
+let dirtOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/mulch.obj');
 let dirt: Mesh;
 
-let groundOBJ: string = readTextFile('./src/geometry/grass.obj');
+let groundOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/ground.obj');
 let ground: Mesh;
 
 let appleOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/apple.obj');
