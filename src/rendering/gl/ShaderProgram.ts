@@ -151,8 +151,8 @@ class ShaderProgram {
   setTextures() {
     this.use();
     this.barkTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/bark.jpg')
-    this.leafTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/leaf1.jpg')
-    this.leafTexture2 = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/leaf2.jpg')
+    this.leafTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/leaf1.png')
+    this.leafTexture2 = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/leaf2.png')
     this.potTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/pot.jpg')
     this.groundTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/ground.jpg')
     this.appleTexture1 = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/apple1.jpg')
