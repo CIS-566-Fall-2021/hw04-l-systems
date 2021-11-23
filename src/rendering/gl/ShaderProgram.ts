@@ -150,14 +150,14 @@ class ShaderProgram {
 
   setTextures() {
     this.use();
-    this.barkTexture = this.createTexture('./src/textures/bark.jpg')
-    this.leafTexture = this.createTexture('./src/textures/leaf1.png')
-    this.leafTexture2 = this.createTexture('./src/textures/leaf9.png')
-    this.potTexture = this.createTexture('./src/textures/terracotta.jpg')
-    this.groundTexture = this.createTexture('./src/textures/ground.jpg')
-    this.appleTexture1 = this.createTexture('./src/textures/apple1.jpg')
-    this.appleTexture2 = this.createTexture('./src/textures/apple2.jpg')
-    this.mulchTexture = this.createTexture('./src/textures/mulch.jpg')
+    this.barkTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/bark.jpg')
+    this.leafTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/leaf1.jpg')
+    this.leafTexture2 = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/leaf2.jpg')
+    this.potTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/pot.jpg')
+    this.groundTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/ground.jpg')
+    this.appleTexture1 = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/apple1.jpg')
+    this.appleTexture2 = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/apple2.jpg')
+    this.mulchTexture = this.createTexture('https://raw.githubusercontent.com/18smlee/hw04-l-systems/085a722a94906cbd577196143a2da98014628eb5/src/textures/mulch.jpg')
     gl.uniform1i(this.unifBarkTexture, 0);
     gl.uniform1i(this.unifLeafTexture, 1);
     gl.uniform1i(this.unifPotTexture, 2);
