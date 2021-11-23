@@ -44,7 +44,7 @@ let pot: Mesh;
 let dirtOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/mulch.obj');
 let dirt: Mesh;
 
-let groundOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/ground.obj');
+let groundOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/grass.obj');
 let ground: Mesh;
 
 let appleOBJ: string = readTextFile('https://raw.githubusercontent.com/18smlee/hw04-l-systems/master/src/geometry/apple.obj');
