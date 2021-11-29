@@ -3,7 +3,6 @@ Name : Samantha Lee
 PennKey : smlee18
 
 Live Demo: https://18smlee.github.io/hw04-l-systems/
-Currently not working :(
 
 ![image](tree_overview.PNG)
 
