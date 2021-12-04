@@ -3,6 +3,7 @@ import Drawable from './Drawable';
 import Camera from '../../Camera';
 import {gl} from '../../globals';
 import ShaderProgram from './ShaderProgram';
+import { scene_control } from '../../main';
 
 // In this file, `gl` is accessible because it is imported above
 class OpenGLRenderer {
@@ -38,8 +39,13 @@ class OpenGLRenderer {
     prog.setModelMatrix(model);
     prog.setViewProjMatrix(viewProj);
     prog.setCameraAxes(axes);
-
+    prog.setFogColor(scene_control.depth_fog_color);
     for (let drawable of drawables) {
+      
+      if (drawable.bindTex()){
+        prog.setText(drawable.getTex());
+        //console.log(drawable);
+      }
       prog.draw(drawable);
     }
   }

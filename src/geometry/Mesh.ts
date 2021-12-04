@@ -2,6 +2,7 @@ import {vec3, vec4} from 'gl-matrix';
 import Drawable from '../rendering/gl/Drawable';
 import {gl} from '../globals';
 import * as Loader from 'webgl-obj-loader';
+import { debug } from 'console';
 
 class Mesh extends Drawable {
   indices: Uint32Array;
@@ -9,6 +10,7 @@ class Mesh extends Drawable {
   normals: Float32Array;
   colors: Float32Array;
   uvs: Float32Array;
+  offsets: Float32Array;
   center: vec4;
 
   objString: string;
@@ -27,20 +29,20 @@ class Mesh extends Drawable {
     let idxTemp: Array<number> = [];
 
     var loadedMesh = new Loader.Mesh(this.objString);
+    
 
-    //posTemp = loadedMesh.vertices;
+
     for (var i = 0; i < loadedMesh.vertices.length; i++) {
       posTemp.push(loadedMesh.vertices[i]);
-      if (i % 3 == 2) posTemp.push(1.0);
-    }
-
-    for (var i = 0; i < loadedMesh.vertexNormals.length; i++) {
       norTemp.push(loadedMesh.vertexNormals[i]);
-      if (i % 3 == 2) norTemp.push(0.0);
+      if (i % 3 == 2) {
+        posTemp.push(1.0);
+        norTemp.push(0.0);
+      }
     }
 
+    idxTemp =  loadedMesh.indices;
     uvsTemp = loadedMesh.textures;
-    idxTemp = loadedMesh.indices;
 
     // white vert color for now
     this.colors = new Float32Array(posTemp.length);
@@ -54,8 +56,8 @@ class Mesh extends Drawable {
     this.uvs = new Float32Array(uvsTemp);
 
     this.generateIdx();
-    this.generatePos();
     this.generateNor();
+    this.generatePos();
     this.generateUV();
     this.generateCol();
 
@@ -63,11 +65,14 @@ class Mesh extends Drawable {
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufIdx);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.indices, gl.STATIC_DRAW);
 
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
+    gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
+
+    
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufNor);
     gl.bufferData(gl.ARRAY_BUFFER, this.normals, gl.STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.bufPos);
-    gl.bufferData(gl.ARRAY_BUFFER, this.positions, gl.STATIC_DRAW);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.bufCol);
     gl.bufferData(gl.ARRAY_BUFFER, this.colors, gl.STATIC_DRAW);
@@ -78,6 +83,8 @@ class Mesh extends Drawable {
     console.log(`Created Mesh from OBJ`);
     this.objString = ""; // hacky clear
   }
+
+
 };
 
 export default Mesh;

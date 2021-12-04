@@ -10,6 +10,12 @@ abstract class Drawable {
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
 
+  bufQuat: WebGLBuffer;
+  bufScale: WebGLBuffer;
+  // customized
+  texture: WebGLTexture;
+
+
   idxGenerated: boolean = false;
   posGenerated: boolean = false;
   norGenerated: boolean = false;
@@ -17,6 +23,10 @@ abstract class Drawable {
   translateGenerated: boolean = false;
   uvGenerated: boolean = false;
 
+
+  texBound: boolean = false;
+  scaleGenerated: boolean = false;
+  quatGenerated: boolean = false;
   numInstances: number = 0; // How many instances of this Drawable the shader program should draw
 
   abstract create() : void;
@@ -28,6 +38,9 @@ abstract class Drawable {
     gl.deleteBuffer(this.bufCol);
     gl.deleteBuffer(this.bufTranslate);
     gl.deleteBuffer(this.bufUV);
+    gl.deleteBuffer(this.bufQuat);
+    gl.deleteBuffer(this.bufScale);
+    gl.deleteTexture(this.texture);
   }
 
   generateIdx() {
@@ -59,6 +72,25 @@ abstract class Drawable {
     this.uvGenerated = true;
     this.bufUV = gl.createBuffer();
   }
+
+  generateScale() {
+    this.scaleGenerated = true;
+    this.bufScale = gl.createBuffer();
+  }
+
+  generateQuat() {
+    this.quatGenerated = true;
+    this.bufQuat = gl.createBuffer();
+  }
+
+  // custom generate
+
+  generateTex(): WebGLTexture{
+    this.texBound = true;
+    this.texture = gl.createTexture();
+    return this.texture;
+  }
+
 
   bindIdx(): boolean {
     if (this.idxGenerated) {
@@ -100,6 +132,32 @@ abstract class Drawable {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUV);
     }
     return this.uvGenerated;
+  }
+
+  bindTex(): boolean {
+    if(this.texBound) {
+      gl.bindTexture(gl.TEXTURE_2D, this.texture);
+    }
+    return this.texBound;
+  }
+  
+  bindQuat(): boolean {
+    if (this.quatGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufQuat);
+    }
+    return this.quatGenerated;
+  }
+
+  bindScale(): boolean {
+    if (this.scaleGenerated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufScale);
+    }
+    return this.scaleGenerated;
+  }
+
+
+  getTex(): WebGLTexture{
+    return this.texture;
   }
 
   elemCount(): number {
