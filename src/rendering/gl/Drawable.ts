@@ -9,6 +9,10 @@ abstract class Drawable {
   bufTranslate: WebGLBuffer;
   bufCol: WebGLBuffer;
   bufUV: WebGLBuffer;
+  bufT1: WebGLBuffer;
+  bufT2: WebGLBuffer;
+  bufT3: WebGLBuffer;
+  bufT4: WebGLBuffer;
 
   idxGenerated: boolean = false;
   posGenerated: boolean = false;
@@ -16,7 +20,10 @@ abstract class Drawable {
   colGenerated: boolean = false;
   translateGenerated: boolean = false;
   uvGenerated: boolean = false;
-
+  T1Generated: boolean = false;
+  T2Generated: boolean = false;
+  T3Generated: boolean = false;
+  T4Generated: boolean = false;
   numInstances: number = 0; // How many instances of this Drawable the shader program should draw
 
   abstract create() : void;
@@ -28,6 +35,10 @@ abstract class Drawable {
     gl.deleteBuffer(this.bufCol);
     gl.deleteBuffer(this.bufTranslate);
     gl.deleteBuffer(this.bufUV);
+    gl.deleteBuffer(this.bufT1);
+    gl.deleteBuffer(this.bufT2);
+    gl.deleteBuffer(this.bufT3);
+    gl.deleteBuffer(this.bufT4);
   }
 
   generateIdx() {
@@ -53,6 +64,26 @@ abstract class Drawable {
   generateTranslate() {
     this.translateGenerated = true;
     this.bufTranslate = gl.createBuffer();
+  }
+
+  generateT1() {
+    this.T1Generated = true;
+    this.bufT1 = gl.createBuffer();
+  }
+
+  generateT2() {
+    this.T2Generated = true;
+    this.bufT2 = gl.createBuffer();
+  }
+
+  generateT3() {
+    this.T3Generated = true;
+    this.bufT3 = gl.createBuffer();
+  }
+
+  generateT4() {
+    this.T4Generated = true;
+    this.bufT4 = gl.createBuffer();
   }
 
   generateUV() {
@@ -100,6 +131,34 @@ abstract class Drawable {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.bufUV);
     }
     return this.uvGenerated;
+  }
+
+  bindT1(): boolean{
+    if(this.T1Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufT1);
+    }
+    return this.T1Generated;
+  }
+
+  bindT2(): boolean{
+    if(this.T2Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufT2);
+    }
+    return this.T2Generated;
+  }
+
+  bindT3(): boolean{
+    if(this.T3Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufT3);
+    }
+    return this.T3Generated;
+  }
+
+  bindT4(): boolean{
+    if(this.T4Generated) {
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.bufT4);
+    }
+    return this.T4Generated;
   }
 
   elemCount(): number {
